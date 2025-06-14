@@ -1,5 +1,6 @@
 package com.example.demo.modelo;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -19,9 +20,9 @@ public class Usuarios {
     private Integer idUsuario;
 
     private String nombre;
-    private Date fechaExpedicion;
+    private LocalDate fechaExpedicion;
     private String categoria;
-    private Date vigencia;
+    private LocalDate vigencia;
     private String email;
     private String telefono;
     private String password;
@@ -32,7 +33,7 @@ public class Usuarios {
     // metOdos
 
     // constructor
-	public Usuarios(String nombre, Date fechaExpedicion, String categoria, Date vigencia,
+	public Usuarios(String nombre, LocalDate fechaExpedicion, String categoria, LocalDate vigencia,
 			String email, String telefono, String password, List<Alquileres> alquileres) {
 		super();
 		this.nombre = nombre;
@@ -68,11 +69,11 @@ public class Usuarios {
 		this.nombre = nombre;
 	}
 
-	public Date getFechaExpedicion() {
+	public LocalDate getFechaExpedicion() {
 		return fechaExpedicion;
 	}
 
-	public void setFechaExpedicion(Date fechaExpedicion) {
+	public void setFechaExpedicion(LocalDate fechaExpedicion) {
 		this.fechaExpedicion = fechaExpedicion;
 	}
 
@@ -84,11 +85,11 @@ public class Usuarios {
 		this.categoria = categoria;
 	}
 
-	public Date getVigencia() {
+	public LocalDate getVigencia() {
 		return vigencia;
 	}
 
-	public void setVigencia(Date vigencia) {
+	public void setVigencia(LocalDate vigencia) {
 		this.vigencia = vigencia;
 	}
 
