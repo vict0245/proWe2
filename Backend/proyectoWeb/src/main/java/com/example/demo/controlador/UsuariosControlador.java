@@ -1,6 +1,7 @@
 package com.example.demo.controlador;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,12 +29,16 @@ public class UsuariosControlador {
 	}
 	
 	@PostMapping("/registrarUsuario")
-	public ResponseEntity<Usuarios> registroUsuario(@RequestBody Usuarios usuario){
+	public ResponseEntity<String> registroUsuario(@RequestBody Usuarios usuario){
 		try {
+			Optional <Usuarios> usuarioExistente = usuariorepositorio.findByIdUsuario(usuario.getIdUsuario());
+			if(usuarioExistente.isPresent()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El usuario ya esta registrado con esa identificación");
+			}
 			Usuarios nuevoUsuario = this.usuariorepositorio.save(usuario);
-			return ResponseEntity.ok(nuevoUsuario);
+			return ResponseEntity.ok("Se registro correctamente el usuario");
 		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en el registro");
 		}
 	}
 }
