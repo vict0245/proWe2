@@ -1,6 +1,8 @@
 package com.example.demo.controlador;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,21 +92,25 @@ public class AdministradoresControlador {
 	}
 	
 	@PutMapping("/actualizarvehiculo")
-	public ResponseEntity<?> actualizarvehiculo(@PathVariable int id,@RequestBody Vehiculos vehiculos){
+	public ResponseEntity<?> actualizarvehiculo(@RequestParam int id,@RequestBody Map<String, Object> cambios){
 		Optional<Vehiculos> vehiculoactualizado = repositorioV.findByIdVehiculo(id);
 		if(vehiculoactualizado.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El vehiculo con ID: " +id+ "no encontrado");
 		}
 		try {
-			Vehiculos newvehiculo = vehiculoactualizado.get();
-			newvehiculo.setPlaca(vehiculos.getPlaca());
-			newvehiculo.setMarca(vehiculos.getMarca());
-			newvehiculo.setModelo(vehiculos.getModelo());
-			newvehiculo.setColor(vehiculos.getColor());
-			newvehiculo.setEstado(vehiculos.getEstado());
-			newvehiculo.setValorAlquilerDia(vehiculos.getValorAlquilerDia());
-			newvehiculo.setTipo(vehiculos.getTipo());
-			Vehiculos actualizado = this.repositorioV.save(newvehiculo);
+			Vehiculos vehiculo = vehiculoactualizado.get();
+			cambios.forEach((clave, valor) -> {
+			    switch (clave) {
+			        case "placa": vehiculo.setPlaca((String) valor); break;
+			        case "marca": vehiculo.setMarca((String) valor); break;
+			        case "modelo": vehiculo.setModelo((String) valor); break;
+			        case "color": vehiculo.setColor((String) valor); break;
+			        case "estado": vehiculo.setEstado((String) valor); break;
+			        case "valorAlquilerDia": vehiculo.setValorAlquilerDia(new BigDecimal(valor.toString())); break;
+			        case "tipo": vehiculo.setTipo((String) valor); break;
+			    }
+			});
+			Vehiculos actualizado = this.repositorioV.save(vehiculo);
 			return ResponseEntity.ok(actualizado);
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el vehiculo " + e.getMessage());
@@ -112,7 +118,7 @@ public class AdministradoresControlador {
 	}
 	
 	@DeleteMapping("/eliminarvehiculo")
-	public ResponseEntity<String> eliminar(@PathVariable int id){
+	public ResponseEntity<String> eliminar(@RequestParam int id){
 		Optional<Vehiculos> vehiculo = repositorioV.findByIdVehiculo(id);
 
 		if(vehiculo.isEmpty()) {
