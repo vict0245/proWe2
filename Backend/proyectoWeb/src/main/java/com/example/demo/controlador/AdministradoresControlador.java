@@ -54,6 +54,11 @@ public class AdministradoresControlador {
 		return this.repositorioA.findByGestiones(gestion);
 	}
 	
+	@PostMapping("/buscarPorEmail")
+	public List<Administradores> buscarPorGestion(@RequestBody String email){
+		return this.repositorioA.findByEmail(email);
+	}
+	
 	@PostMapping("/eliminar")
 	public void eliminar(@RequestParam Long id) {
 		this.repositorioA.deleteById(id);
@@ -77,7 +82,7 @@ public class AdministradoresControlador {
 			String encodepass = encoder.encode(a.getPassword());
 			a.setPassword(encodepass);
 			Administradores nuevoAdministrador = this.repositorioA.save(a);	
-			return encodepass;
+			return nuevoAdministrador;
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(null);
