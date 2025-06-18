@@ -1,7 +1,6 @@
 package com.example.demo.modelo;
 
-import java.util.Date;
-
+import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,11 +25,11 @@ public class Gestion_Alquiler {
     @JoinColumn(name = "id_alquiler", nullable = false)
     private Alquileres alquiler;
 
-    private Date fechaAccion;
+    private LocalDate fechaAccion;
     private String accion;
 
 
-    public Gestion_Alquiler(Administradores administrador, Alquileres alquiler, Date fechaAccion,
+    public Gestion_Alquiler(Administradores administrador, Alquileres alquiler, LocalDate fechaAccion,
 			String accion) {
 		super();
 		this.administrador = administrador;
@@ -69,11 +68,11 @@ public class Gestion_Alquiler {
 		this.alquiler = alquiler;
 	}
 
-	public Date getFechaAccion() {
+	public LocalDate getFechaAccion() {
 		return fechaAccion;
 	}
 
-	public void setFechaAccion(Date fechaAccion) {
+	public void setFechaAccion(LocalDate fechaAccion) {
 		this.fechaAccion = fechaAccion;
 	}
 
