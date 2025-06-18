@@ -15,7 +15,7 @@ public class Administradores {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idAdministrador;
+    private Long idAdministrador;
 
     private String nombre;
     private String password;
@@ -42,10 +42,10 @@ public class Administradores {
 	
 
 	// Getters y setters
-	public Integer getIdAdministrador() {
+	public Long getIdAdministrador() {
 		return idAdministrador;
 	}
-	public void setIdAdministrador(Integer idAdministrador) {
+	public void setIdAdministrador(Long idAdministrador) {
 		this.idAdministrador = idAdministrador;
 	}
 	public String getNombre() {
