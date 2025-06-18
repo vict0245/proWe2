@@ -15,7 +15,7 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres,Long>{
 //disponibles, incluyendo detalles como modelo, 
 //tipo, precio por día.
 	
-	@Query(value=" select modelo,tipo,valor_alquiler_dia from vehiculos",nativeQuery=true)
+	@Query(value=" select modelo,tipo,valor_alquiler_dia from vehiculos where estado = 'Disponible' ",nativeQuery=true)
 	public List<Object[]> mostrarVehi();
 	
 //El sistema calcula el costo total del alquiler basándose en el vehículo y el período.
@@ -27,7 +27,27 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres,Long>{
 	
 	@Query(value="select id_vehiculo,fecha_inicio,fecha_fin,valor_total from alquileres",nativeQuery=true)
 	public List<Object[]> soli();
-			
+	
+//El sistema actualiza el estado de la reserva a "Cancelada" en la base de datos.
+	
+	@Query(value = "UPDATE vehiculos SET disponible = true WHERE id_vehiculo = :id", nativeQuery = true)
+	void liberarVehiculo(@Param("id") int idVehiculo);
+
+//El sistema verifica la disponibilidad del vehículo para las fechas seleccionadas.
+	
+	@Query(value = "SELECT * FROM alquileres WHERE id_vehiculo = :idVehiculo AND estado = 'Alquilado' AND (" +
+            "fecha_inicio <= :fechaFin AND fecha_fin >= :fechaInicio)", nativeQuery = true)
+List<Alquileres> verificarDisponibilidad(@Param("idVehiculo") int idVehiculo, @Param("fechaInicio") Date fechaInicio, @Param("fechaFin") Date fechaFin);
+                                     
+                                     
+// El sistema consulta la base de datos para identificar todas las reservas de alquiler cuyo estado indica 
+	//que el vehículo está actualmente alquilado o en posesión del cliente.
+	
+	@Query(value = "select * from alquileres where estado = 'Alquilado'",nativeQuery= true)
+	public List<Object> ListaAlqui();
+	
+	
+	
 
 	
 }
