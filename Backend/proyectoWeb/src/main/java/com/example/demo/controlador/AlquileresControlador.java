@@ -30,9 +30,9 @@ public class AlquileresControlador {
 	private VehiculosRepositorio RepoVehiculos;
 	
 	@PostMapping("/detallesVehiculo")
-	public ResponseEntity<?> detalle(){
+	public ResponseEntity<?> detalle(@RequestParam String estado){
 		try {
-	        List<Object[]> vehiculos = repositorioAlquiler.mostrarVehi();
+	        List<Object[]> vehiculos = repositorioAlquiler.mostrarVehi(estado);
 	        return ResponseEntity.ok(vehiculos);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -64,8 +64,8 @@ public class AlquileresControlador {
 		}
 	}
 	@PostMapping("Cancelar")
-	public ResponseEntity<?> Cancelar(@RequestParam Long id){
-		this.repositorioAlquiler.mostrarVehi();
+	public ResponseEntity<?> Cancelar(@RequestParam Long id,@RequestParam String estado){
+		this.repositorioAlquiler.mostrarVehi(estado);
 		  Alquileres alquiler = repositorioAlquiler.findById(id).orElse(null);
 	    if (repositorioAlquiler.existsById(id)) {
 	        try {

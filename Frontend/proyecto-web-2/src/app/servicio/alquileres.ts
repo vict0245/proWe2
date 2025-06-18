@@ -13,8 +13,8 @@ export class AlquileresServicio {
   constructor(private httpClient: HttpClient) {
 
    }
-   ObtenerListaVehiculos(): Observable<Object[]>{
-    return this.httpClient.get<Object[]>(`${this.bdURL}`);
+   ObtenerListaVehiculos(estado:String): Observable<Object[]>{
+    return this.httpClient.post<Object[]>(`${this.bdURL}`,estado);
    }
 
 }
