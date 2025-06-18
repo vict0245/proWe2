@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.example.demo.modelo.Usuarios;
 import com.example.demo.modelo.Vehiculos;
@@ -22,5 +23,7 @@ public interface VehiculosRepositorio extends JpaRepository<Vehiculos, Integer> 
 	public List<Vehiculos> findByTipo(String tipo);
 	
 	boolean existsByPlaca(String placa);
-
+	
+	@Query(value="select * from Vehiculos where estado = 'DISPONIBLE'",nativeQuery=true)
+	List<Vehiculos> VehiculosDisponibles();
 }

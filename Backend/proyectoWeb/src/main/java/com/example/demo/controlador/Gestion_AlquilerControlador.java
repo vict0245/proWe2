@@ -104,7 +104,7 @@ public class Gestion_AlquilerControlador {
 	    repositorioV.save(vehiculo);
 
 	    Gestion_Alquiler gestion = new Gestion_Alquiler();
-	    gestion.setAccion("devuelto");
+	    gestion.setAccion("DEVUELTO");
 	    gestion.setFechaAccion(fechaActual);
 	    gestion.setAlquiler(alquiler);
 
@@ -115,7 +115,7 @@ public class Gestion_AlquilerControlador {
 
 	    return ResponseEntity.ok("Vehículo devuelto correctamente. Total: $" + nuevoTotal);
 	}
-	
+	  
 	@PostMapping("/RegistrarAccion")
 		ResponseEntity<?> registroAccion(@RequestParam Integer idAlquiler, @RequestParam Integer idAdministrador, @RequestParam String accion ){
 		try {
