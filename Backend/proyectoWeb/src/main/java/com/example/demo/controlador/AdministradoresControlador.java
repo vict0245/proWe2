@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.modelo.Administradores;
 import com.example.demo.modelo.Gestion_Alquiler;
+import com.example.demo.modelo.Vehiculos;
 import com.example.demo.repositorio.AdministradoresRepositorio;
+import com.example.demo.repositorio.VehiculosRepositorio;
 
 
 @RestController
@@ -27,6 +29,9 @@ public class AdministradoresControlador {
 	
 	@Autowired
 	private PasswordEncoder encoder;
+	
+	@Autowired
+	private VehiculosRepositorio vehRepo;
 	
 	// CRUD
 	@GetMapping("/ver")
@@ -105,5 +110,12 @@ public class AdministradoresControlador {
 			return "no hay nada jajaja";
 		}
 			
+	}
+	
+	@PostMapping("/cambiarEstadoVehiclo")
+	public void cambiarEstadoVehiclo(@RequestParam Long id,@RequestParam String nuevoEstado) {
+		Vehiculos v = this.repositorioA.estadoVehiculo(id);
+		v.setEstado(nuevoEstado);
+		vehRepo.save(v);
 	}
 }

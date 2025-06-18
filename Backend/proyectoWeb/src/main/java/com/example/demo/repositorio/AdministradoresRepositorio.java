@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.modelo.Administradores;
 import com.example.demo.modelo.Gestion_Alquiler;
+import com.example.demo.modelo.Vehiculos;
 
 @Repository
 public interface AdministradoresRepositorio extends JpaRepository<Administradores,Long> {
@@ -18,5 +19,6 @@ public interface AdministradoresRepositorio extends JpaRepository<Administradore
 	public Administradores findByGestiones(Gestion_Alquiler gestion);
 	public List<Administradores> findByEmail(String email);
 	
-	
+	@Query(value="select * from vehiculos where id_vehiculo=: id",nativeQuery=true)
+	public Vehiculos estadoVehiculo(@Param ("id") Long id);
 }

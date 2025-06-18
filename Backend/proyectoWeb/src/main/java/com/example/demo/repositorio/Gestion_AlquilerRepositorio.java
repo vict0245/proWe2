@@ -1,5 +1,9 @@
 package com.example.demo.repositorio;
 
-public interface Gestion_AlquilerRepositorio {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.modelo.Gestion_Alquiler;
+
+public interface Gestion_AlquilerRepositorio extends JpaRepository<Gestion_Alquiler,Long>{
 
 }
