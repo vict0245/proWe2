@@ -11,10 +11,10 @@ import com.example.demo.modelo.Administradores;
 import com.example.demo.modelo.Usuarios;
 
 @Repository
-public interface AdministradoresRepositorio extends JpaRepository<Administradores,Long> {
+public interface AdministradoresRepositorio extends JpaRepository<Administradores, Integer> {
 	
-	Optional <Administradores> findByIdAdministrador(int idAdministrador);
+	Optional <Administradores> findByIdAdministrador(Integer idAdministrador);
 
 	@Query(value="select password from administradores where id_administrador=:id",nativeQuery=true)
-	public String buscarAdministrador(@Param("id")int id);
+	public String buscarAdministrador(@Param("idAdministrador")Integer idAdministrador);
 }
