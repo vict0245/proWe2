@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,6 +12,10 @@ import com.example.demo.modelo.Vehiculos;
 
 public interface VehiculosRepositorio extends JpaRepository<Vehiculos, Integer> {
 	
+		
+	@Query(value="update vehiculo set estado = :estado where id_vehiculo = :id",nativeQuery=true)
+	void estadoDispo(@Param("estado")String estado,@Param("id")int id_vehiculo);
+
 	Optional <Vehiculos> findByIdVehiculo(int idVehiculo);
 	public List<Vehiculos> findByPlaca(String placa);
 	public List<Vehiculos> findByMarca(String marca);
