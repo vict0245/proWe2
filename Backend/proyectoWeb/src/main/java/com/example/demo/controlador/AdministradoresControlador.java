@@ -106,9 +106,4 @@ public class AdministradoresControlador {
 		}
 			
 	}
-	
-	public String hola() {
-	 String texto="hola";
-	 return texto;
-	}
 }
