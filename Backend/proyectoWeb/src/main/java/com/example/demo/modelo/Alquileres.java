@@ -1,6 +1,7 @@
 package com.example.demo.modelo;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class Alquileres {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idAlquiler;
+    private Long idAlquiler;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
@@ -29,19 +30,18 @@ public class Alquileres {
     @JoinColumn(name = "id_vehiculo", nullable = false)
     private Vehiculos vehiculo;
 
-    private Date fechaInicio;
-    private Date fechaFin;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
     private String estado;
-
     private BigDecimal valorTotal;
     private BigDecimal valorAdicional;
-    private Date fechaEntregaReal;
+    private LocalDate fechaEntregaReal;
 
     @OneToMany(mappedBy = "alquiler")
     private List<Gestion_Alquiler> gestiones;
 
-	public Alquileres(Usuarios usuario, Vehiculos vehiculo, Date fechaInicio, Date fechaFin,
-			String estado, BigDecimal valorTotal, BigDecimal valorAdicional, Date fechaEntregaReal,
+	public Alquileres(Usuarios usuario, Vehiculos vehiculo, LocalDate fechaInicio, LocalDate fechaFin,
+			String estado, BigDecimal valorTotal, BigDecimal valorAdicional, LocalDate fechaEntregaReal,
 			List<Gestion_Alquiler> gestiones) {
 		super();
 		this.usuario = usuario;
@@ -63,11 +63,11 @@ public class Alquileres {
 
     // Getters y setters
 	
-	public Integer getIdAlquiler() {
+	public Long getIdAlquiler() {
 		return idAlquiler;
 	}
 
-	public void setIdAlquiler(Integer idAlquiler) {
+	public void setIdAlquiler(Long idAlquiler) {
 		this.idAlquiler = idAlquiler;
 	}
 
@@ -87,19 +87,19 @@ public class Alquileres {
 		this.vehiculo = vehiculo;
 	}
 
-	public Date getFechaInicio() {
+	public LocalDate getFechaInicio() {
 		return fechaInicio;
 	}
 
-	public void setFechaInicio(Date fechaInicio) {
+	public void setFechaInicio(LocalDate fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public Date getFechaFin() {
+	public LocalDate getFechaFin() {
 		return fechaFin;
 	}
 
-	public void setFechaFin(Date fechaFin) {
+	public void setFechaFin(LocalDate fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 
@@ -127,11 +127,11 @@ public class Alquileres {
 		this.valorAdicional = valorAdicional;
 	}
 
-	public Date getFechaEntregaReal() {
+	public LocalDate getFechaEntregaReal() {
 		return fechaEntregaReal;
 	}
 
-	public void setFechaEntregaReal(Date fechaEntregaReal) {
+	public void setFechaEntregaReal(LocalDate fechaEntregaReal) {
 		this.fechaEntregaReal = fechaEntregaReal;
 	}
 

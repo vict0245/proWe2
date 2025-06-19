@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.modelo.Administradores;
 import com.example.demo.modelo.Gestion_Alquiler;
+import com.example.demo.modelo.Usuarios;
 import com.example.demo.modelo.Vehiculos;
 import com.example.demo.repositorio.AdministradoresRepositorio;
 import com.example.demo.repositorio.AlquileresRepositorio;
@@ -31,6 +32,12 @@ import com.example.demo.repositorio.VehiculosRepositorio;
 @RestController
 @RequestMapping("/administradores")
 public class AdministradoresControlador {
+	
+	@Autowired
+	private VehiculosRepositorio repositorioV;
+	
+	@Autowired
+	private AlquileresRepositorio repositorioAlquiler;
 	@Autowired
 	private AdministradoresRepositorio repositorioA;
 	
@@ -77,18 +84,26 @@ public class AdministradoresControlador {
 	public Administradores actualizar(@RequestBody Administradores a) {
 		Administradores adminT = this.repositorioA.findById(a.getIdAdministrador()).get();
 		adminT.setNombre(a.getNombre());
-		adminT.setPassword(a.getPassword());
+		adminT.setPassword(encoder.encode(a.getPassword()));
 		adminT.setEmail(a.getEmail());
 		adminT.setTelefono(a.getTelefono());
 		adminT.setGestiones(a.getGestiones());
 		Administradores actualizado = this.repositorioA.save(adminT);
 		return actualizado;
 	}
-	@Aotuwired
-	private VehiculosRepositorio repositorioV;
 	
-	@Autowired
-	private AlquileresRepositorio repositorioAlquiler;
+	@PostMapping("guardar")
+	public Object guardarA(@RequestBody Administradores a) {
+		try {
+			String encodepass = encoder.encode(a.getPassword());
+			a.setPassword(encodepass);
+			Administradores nuevoAdministrador = this.repositorioA.save(a);	
+			return nuevoAdministrador;
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(null);
+		}
+	}
 		
 	// TareasTrello
 	@PostMapping("/iniciar")

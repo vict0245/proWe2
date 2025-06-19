@@ -72,7 +72,7 @@ public class AlquileresControlador {
 	        	 alquiler.setEstado("Cancelada");
 	             repositorioAlquiler.save(alquiler);
 	             
-	             int idVehiculo = alquiler.getVehiculo().getIdVehiculo();
+	             Long idVehiculo = alquiler.getVehiculo().getIdVehiculo();
 	             repositorioAlquiler.liberarVehiculo(idVehiculo);
 	            return ResponseEntity.ok("Reserva cancelada y vehículo liberado.");
 
@@ -112,7 +112,7 @@ public class AlquileresControlador {
 				alquiler.setEstado("Alquilado");
 	            repositorioAlquiler.save(alquiler);
 	            
-	            int idVehiculo = alquiler.getVehiculo().getIdVehiculo();
+	            Long idVehiculo = alquiler.getVehiculo().getIdVehiculo();
 	            RepoVehiculos.estadoDispo("Alquilado", idVehiculo);
 	            return ResponseEntity.ok("Reserva confirmada y vehículo marcado como alquilado.");
   

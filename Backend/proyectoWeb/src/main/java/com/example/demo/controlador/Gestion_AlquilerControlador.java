@@ -1,6 +1,8 @@
 package com.example.demo.controlador;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +43,7 @@ public class Gestion_AlquilerControlador {
 	private Gestion_AlquilerRepositorio repositorioGestion;
 	
 	@PutMapping("/estadoEntregado")
-	public ResponseEntity<?> entregarVehiculo(@RequestParam Integer idAlquiler, @RequestParam Integer idAdministrador) {
+	public ResponseEntity<?> entregarVehiculo(@RequestParam Long idAlquiler, @RequestParam Long idAdministrador) {
 	    Optional<Alquileres> alquilerRevision = repositorioAlquiler.findById(idAlquiler);
 
 	    if (alquilerRevision.isEmpty()) {
@@ -58,7 +60,7 @@ public class Gestion_AlquilerControlador {
 
 	    Gestion_Alquiler gestion = new Gestion_Alquiler();
 	    gestion.setAccion("entregado");
-	    gestion.setFechaAccion(new Date());
+	    gestion.setFechaAccion(LocalDate.now());
 	    gestion.setAlquiler(alquiler);
 
 	    Administradores admin = repositorioA.findByIdAdministrador(idAdministrador).get(); // Temporal
@@ -71,7 +73,7 @@ public class Gestion_AlquilerControlador {
 	}
 	
 	@PutMapping("/estadoDevuelto")
-	public ResponseEntity<?> devolverVehiculo(@RequestParam Integer idAlquiler) {
+	public ResponseEntity<?> devolverVehiculo(@RequestParam Long idAlquiler) {
 	    Optional<Alquileres> alquilerRevision = repositorioAlquiler.findById(idAlquiler);
 
 	    if (alquilerRevision.isEmpty()) {
@@ -80,16 +82,15 @@ public class Gestion_AlquilerControlador {
 
 	    Alquileres alquiler = alquilerRevision.get();
 
-	    Date fechaActual = new Date();
-	    Date fechaFin = alquiler.getFechaFin();
+	    LocalDate fechaActual = LocalDate.now();
+	    LocalDate fechaFin = alquiler.getFechaFin();
 
-	    long retrasoHoras = 0;
-	    if (fechaActual.after(fechaFin)) {
-	        long diferenciaMs = fechaActual.getTime() - fechaFin.getTime();
-	        retrasoHoras = TimeUnit.HOURS.convert(diferenciaMs, TimeUnit.MILLISECONDS);
+	    long retrasoDias = 0;
+	    if (fechaActual.isAfter(fechaFin)) {
+	        retrasoDias = ChronoUnit.DAYS.between(fechaFin, fechaActual);
 	    }
 
-	    BigDecimal valorAdicional = BigDecimal.valueOf(retrasoHoras * 10000); 
+	    BigDecimal valorAdicional = BigDecimal.valueOf(retrasoDias * 10000); 
 	    BigDecimal nuevoTotal = alquiler.getValorTotal().add(valorAdicional);
 
 	    alquiler.setFechaEntregaReal(fechaActual);
@@ -108,7 +109,7 @@ public class Gestion_AlquilerControlador {
 	    gestion.setFechaAccion(fechaActual);
 	    gestion.setAlquiler(alquiler);
 
-	    Administradores admin = repositorioA.findByIdAdministrador(1).get(); // Temporal
+	    Administradores admin = repositorioA.findByIdAdministrador(1L).get(); // Temporal
 	    gestion.setAdministrador(admin);
 
 	    repositorioGestion.save(gestion);
@@ -117,13 +118,13 @@ public class Gestion_AlquilerControlador {
 	}
 	  
 	@PostMapping("/RegistrarAccion")
-		ResponseEntity<?> registroAccion(@RequestParam Integer idAlquiler, @RequestParam Integer idAdministrador, @RequestParam String accion ){
+		ResponseEntity<?> registroAccion(@RequestParam Long idAlquiler, @RequestParam Long idAdministrador, @RequestParam String accion ){
 		try {
 		Optional<Alquileres> Alquilertengo = repositorioAlquiler.findById(idAlquiler);
 		Optional<Administradores> Administradortengo = repositorioA.findByIdAdministrador(idAdministrador);
 		
 		if(Alquilertengo.isPresent() && Administradortengo.isPresent()) {
-			Date fechahoy = new Date();
+			LocalDate fechahoy = LocalDate.now();
 			Gestion_Alquiler gestion = new Gestion_Alquiler();
 			gestion.setAdministrador(Administradortengo.get());
 			gestion.setAlquiler(Alquilertengo.get());
@@ -141,9 +142,5 @@ public class Gestion_AlquilerControlador {
 
 
 }
-	
-	@GetMapping("/ping")
-	public String ping() {
-	    return "pong";
-	}
+
 }

@@ -33,7 +33,7 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres,Long>{
 //El sistema actualiza el estado de la reserva a "Cancelada" en la base de datos.
 	
 	@Query(value = "update vehiculos set disponible = true WHERE id_vehiculo = :id", nativeQuery = true)
-	void liberarVehiculo(@Param("id") int idVehiculo);
+	void liberarVehiculo(@Param("id") Long idVehiculo);
 
 //El sistema verifica la disponibilidad del vehículo para las fechas seleccionadas.
 	

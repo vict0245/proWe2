@@ -15,7 +15,7 @@ public class Gestion_Alquiler {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idGestion;
+    private Long idGestion;
 
     @ManyToOne
     @JoinColumn(name = "id_admin", nullable = false)
@@ -44,11 +44,11 @@ public class Gestion_Alquiler {
 	}
 
 	// Getters y setters
-	public Integer getIdGestion() {
+	public Long getIdGestion() {
 		return idGestion;
 	}
 
-	public void setIdGestion(Integer idGestion) {
+	public void setIdGestion(Long idGestion) {
 		this.idGestion = idGestion;
 	}
 
