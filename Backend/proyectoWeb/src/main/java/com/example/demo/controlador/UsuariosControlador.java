@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.modelo.Administradores;
 import com.example.demo.modelo.Usuarios;
+import com.example.demo.modelo.credenciales;
 import com.example.demo.repositorio.UsuariosRepositorio;
 
 @RestController
@@ -96,27 +98,29 @@ public class UsuariosControlador {
 		try {
 			String encodepass = encoder.encode(u.getPassword());
 			u.setPassword(encodepass);
-			Usuarios nuevoUsuario = this.repositorioU.save(u);	
-			return nuevoUsuario;
+			this.repositorioU.save(u);	
+			return true;
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(null);
+			return false;
 		}
 	}
 	
 	// TareasTrello
 		@PostMapping("/iniciar")
-		public Object iniciarSecionA(@RequestParam Long id,@RequestParam String password) {
-			Usuarios Apass=this.repositorioU.findById(id).get();
+		public Object iniciarSecionA(@RequestBody credenciales valores) {
+			String email = valores.getEmail();
+			String password = valores.getPassword();
+			Usuarios Apass=this.repositorioU.findByEmail(email);
+			
 			if(Apass!=null) {
 				if(encoder.matches(password,Apass.getPassword())) {
-					return "yes";
+					return true;
 				}else {
-					return "no";
+					return false;
 				}
 			}
 			else {
-				return "no hay nada jajaja";
+				return null;
 			}
 				
 		}

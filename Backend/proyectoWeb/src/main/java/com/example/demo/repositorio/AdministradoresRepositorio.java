@@ -17,7 +17,7 @@ public interface AdministradoresRepositorio extends JpaRepository<Administradore
 	public List<Administradores> findByNombre(String nombre);
 	public List<Administradores> findByTelefono(String telefono);
 	public Administradores findByGestiones(Gestion_Alquiler gestion);
-	public List<Administradores> findByEmail(String email);
+	public Administradores findByEmail(String email);
 	Optional <Administradores> findByIdAdministrador(Long idAdministrador);
 
 	@Query(value="select password from administradores where id_administrador=:id",nativeQuery=true)

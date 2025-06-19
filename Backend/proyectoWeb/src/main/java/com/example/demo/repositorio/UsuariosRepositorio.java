@@ -13,7 +13,7 @@ public interface UsuariosRepositorio extends JpaRepository<Usuarios, Long>{
 	public List<Usuarios> findByFechaExpedicion(LocalDate fechaExpedicion);
 	public List<Usuarios> findByCategoria(String categoria);
 	public List<Usuarios> findByVigencia(LocalDate vigencia);
-	public List<Usuarios> findByEmail(String email);
+	public Usuarios findByEmail(String email);
 	public List<Usuarios> findByTelefono(String telefono);
 	
 }

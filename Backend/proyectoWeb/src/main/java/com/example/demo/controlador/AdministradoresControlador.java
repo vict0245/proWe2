@@ -25,6 +25,7 @@ import com.example.demo.modelo.Administradores;
 import com.example.demo.modelo.Gestion_Alquiler;
 import com.example.demo.modelo.Usuarios;
 import com.example.demo.modelo.Vehiculos;
+import com.example.demo.modelo.credenciales;
 import com.example.demo.repositorio.AdministradoresRepositorio;
 import com.example.demo.repositorio.AlquileresRepositorio;
 import com.example.demo.repositorio.VehiculosRepositorio;
@@ -73,7 +74,7 @@ public class AdministradoresControlador {
 	}
 	
 	@PostMapping("/buscarPorEmail")
-	public List<Administradores> buscarPorGestion(@RequestBody String email){
+	public Administradores buscarPorGestion(@RequestBody String email){
 		return this.repositorioA.findByEmail(email);
 	}
 	
@@ -109,17 +110,20 @@ public class AdministradoresControlador {
 		
 	// TareasTrello
 	@PostMapping("/iniciar")
-	public Object iniciarSecionA(@RequestParam Long id,@RequestParam String password) {
-		Administradores Apass=this.repositorioA.findById(id).get();
+	public Object iniciarSecionA(@RequestBody credenciales valores) {
+		String email = valores.getEmail();
+		String password = valores.getPassword();
+		Administradores Apass=this.repositorioA.findByEmail(email);
+		
 		if(Apass!=null) {
 			if(encoder.matches(password,Apass.getPassword())) {
-				return "yes";
+				return true;
 			}else {
-				return "no";
+				return false;
 			}
 		}
 		else {
-			return "no hay nada jajaja";
+			return null;
 		}
 			
 	}
