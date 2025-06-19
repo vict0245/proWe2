@@ -33,7 +33,6 @@ public class Alquileres {
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private String estado;
-
     private BigDecimal valorTotal;
     private BigDecimal valorAdicional;
     private LocalDate fechaEntregaReal;

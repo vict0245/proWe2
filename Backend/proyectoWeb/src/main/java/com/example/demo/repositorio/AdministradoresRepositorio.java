@@ -1,6 +1,7 @@
 package com.example.demo.repositorio;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,8 +18,16 @@ public interface AdministradoresRepositorio extends JpaRepository<Administradore
 	public List<Administradores> findByNombre(String nombre);
 	public List<Administradores> findByTelefono(String telefono);
 	public Administradores findByGestiones(Gestion_Alquiler gestion);
+<<<<<<< HEAD
 	public List<Administradores> findByEmail(String email);
 	
 	@Query(value="select * from vehiculos where id_vehiculo=: id",nativeQuery=true)
 	public Vehiculos estadoVehiculo(@Param ("id") Long id);
+=======
+	public Administradores findByEmail(String email);
+	Optional <Administradores> findByIdAdministrador(Long idAdministrador);
+
+	@Query(value="select password from administradores where id_administrador=:id",nativeQuery=true)
+	public String buscarAdministrador(@Param("idAdministrador")Long idAdministrador);
+>>>>>>> master
 }
