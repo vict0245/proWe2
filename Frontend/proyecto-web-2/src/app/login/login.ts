@@ -113,7 +113,6 @@ export class LoginComponent {
     this.loginServicio.reguistrarUsuario(this.usuario).subscribe({
       next: (response) => {
         if (response) {
-          alert("Usuario registrado correctamente.");
         } else {
           alert("Error al registrar usuario, por favor intente más tarde.");
         }
