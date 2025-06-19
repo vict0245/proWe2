@@ -16,7 +16,7 @@ public class Vehiculos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idVehiculo;
+    private long idVehiculo;
 
     private String placa;
     private String marca;
@@ -52,7 +52,7 @@ public class Vehiculos {
 
     // Getters y setters
 	
-	public Integer getIdVehiculo() {
+	public Long getIdVehiculo() {
 		return idVehiculo;
 	}
 

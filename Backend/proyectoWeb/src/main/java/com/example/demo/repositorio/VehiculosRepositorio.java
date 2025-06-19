@@ -9,6 +9,6 @@ import com.example.demo.modelo.Vehiculos;
 public interface VehiculosRepositorio extends JpaRepository<Vehiculos,Long> {
 	
 	@Query(value="update vehiculo set estado = :estado where id_vehiculo = :id",nativeQuery=true)
-	void estadoDispo(@Param("estado")String estado,@Param("id")int id_vehiculo);
+	void estadoDispo(@Param("estado")String estado,@Param("id")Long id_vehiculo);
 
 }

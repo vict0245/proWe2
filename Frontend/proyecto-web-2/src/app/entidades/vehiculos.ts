@@ -6,5 +6,5 @@ export class Vehiculos {
       color: String;
       estado: String;
       valorAlquilerDia: number;
-     tipo: String;
+      tipo: String;
 }

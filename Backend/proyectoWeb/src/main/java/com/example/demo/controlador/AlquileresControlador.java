@@ -1,5 +1,10 @@
 package com.example.demo.controlador;
 
+import java.util.Optional;
+
+
+
+import java.math.BigDecimal;
 import java.util.Date;
 
 import java.util.List;
@@ -9,12 +14,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.modelo.Alquileres;
+import com.example.demo.modelo.Vehiculos;
 import com.example.demo.repositorio.AlquileresRepositorio;
 import com.example.demo.repositorio.VehiculosRepositorio;
 
@@ -29,10 +37,44 @@ public class AlquileresControlador {
 	@Autowired
 	private VehiculosRepositorio RepoVehiculos;
 	
-	@PostMapping("/detallesVehiculo")
-	public ResponseEntity<?> detalle(@RequestParam String estado){
+	@PostMapping("/guardarReserva")
+	public ResponseEntity<?> guardarReserva(@RequestBody Alquileres reserva) {
+	    try {
+	        
+	        if (reserva.getVehiculo() == null || reserva.getVehiculo().getIdVehiculo() == null) {
+	            return ResponseEntity.badRequest().body("Falta el ID del vehículo.");
+	        }
+	        
+	        Long idVehi = reserva.getVehiculo().getIdVehiculo();
+	        Vehiculos vehiculoDB = RepoVehiculos.findById(idVehi).orElse(null);
+
+	        if (vehiculoDB == null) {
+	            return ResponseEntity.badRequest().body("Vehículo no encontrado.");
+	        }
+
+	        // Asociar el vehículo real a la reserva
+	        reserva.setVehiculo(vehiculoDB);
+	        reserva.setEstado("Pendiente");
+	        vehiculoDB.setEstado("Alquilado");
+	        repositorioAlquiler.save(reserva);
+	        RepoVehiculos.save(vehiculoDB);
+	        
+
+	        return ResponseEntity.ok("Reserva guardada exitosamente.");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Error al guardar la reserva: " + e.getMessage());
+	    }
+	}
+
+
+
+	
+	@GetMapping("/detallesVehiculo")
+	public ResponseEntity<?> detalle(){
 		try {
-	        List<Object[]> vehiculos = repositorioAlquiler.mostrarVehi(estado);
+	        List<Object[]> vehiculos = repositorioAlquiler.mostrarVehi();
 	        return ResponseEntity.ok(vehiculos);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -41,17 +83,24 @@ public class AlquileresControlador {
 		}
 	}
 	
-	@PostMapping("/valorTotalAlquiler")
-	public ResponseEntity<?> Vta(@RequestParam int id,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date FI,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date FF) {
-		try {
-			List<Object> valor = repositorioAlquiler.valorTotal(id, FI, FF);
-			return ResponseEntity.ok(valor);
-		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(null);
-			
-		}
+	@PostMapping("/valorTotal")
+	public ResponseEntity<?> calcularValorTotal(@RequestParam int id,
+	                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
+	                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin) {
+	    try {
+	        BigDecimal valorDiario = repositorioAlquiler.obtenerValorDiario(id);
+
+	        long diferenciaDias = (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24) + 1;
+
+	        BigDecimal valorTotal = valorDiario.multiply(BigDecimal.valueOf(diferenciaDias));
+
+	        return ResponseEntity.ok("Total a pagar: $" + valorTotal);
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                             .body("Error al calcular: " + e.getMessage());
+	    }
 	}
+
 	
 	@PostMapping("/resumenSolicitud")
 	public ResponseEntity<?> Resumen(){
@@ -63,17 +112,19 @@ public class AlquileresControlador {
 					.body(null);
 		}
 	}
-	@PostMapping("Cancelar")
-	public ResponseEntity<?> Cancelar(@RequestParam Long id,@RequestParam String estado){
-		this.repositorioAlquiler.mostrarVehi(estado);
-		  Alquileres alquiler = repositorioAlquiler.findById(id).orElse(null);
+	@PostMapping("/Cancelar")
+	public ResponseEntity<?> Cancelar(@RequestParam Long id){
+		  Alquileres vehiculo = repositorioAlquiler.findById(id).orElse(null);
+		  Vehiculos hola = RepoVehiculos.findById(id).orElse(null);
 	    if (repositorioAlquiler.existsById(id)) {
 	        try {
-	        	 alquiler.setEstado("Cancelada");
-	             repositorioAlquiler.save(alquiler);
+	        	 vehiculo.setEstado("Cancelada");
+	        	 repositorioAlquiler.save(vehiculo);
+	        	 
+	        	 hola.setEstado("Disponible");
+	        	 RepoVehiculos.save(hola);
 	             
-	             int idVehiculo = alquiler.getVehiculo().getIdVehiculo();
-	             repositorioAlquiler.liberarVehiculo(idVehiculo);
+	            
 	            return ResponseEntity.ok("Reserva cancelada y vehículo liberado.");
 
 	        } catch (Exception e) {
@@ -87,9 +138,15 @@ public class AlquileresControlador {
 	}
 	
 	@PostMapping("/verificarDisponibilidad")
-	public ResponseEntity<?> verificarDisponibilidad(@RequestParam int idVehiculo,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin) {                                                                              
+	public ResponseEntity<?> verificarDisponibilidad(
+	    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
+	    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin) {
+
 	    try {
-	        List<Alquileres> reservas = repositorioAlquiler.verificarDisponibilidad(idVehiculo, fechaInicio, fechaFin);
+	        System.out.println("Fecha Inicio recibida: " + fechaInicio);
+	        System.out.println("Fecha Fin recibida: " + fechaFin);
+
+	        List<Alquileres> reservas = repositorioAlquiler.verificarDisponibilidad(fechaInicio, fechaFin);
 
 	        if (reservas.isEmpty()) {
 	            return ResponseEntity.ok("Disponible");
@@ -97,10 +154,12 @@ public class AlquileresControlador {
 	            return ResponseEntity.ok("No disponible. Ya hay una reserva para esas fechas.");
 	        }
 	    } catch (Exception e) {
+	        e.printStackTrace(); // MOSTRAR ERROR EN CONSOLA
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                             .body("Error al verificar disponibilidad: " + e.getMessage());
 	    }
 	}
+
 
 	
 	@PostMapping("/cambioDisponibilidad")
@@ -112,7 +171,7 @@ public class AlquileresControlador {
 				alquiler.setEstado("Alquilado");
 	            repositorioAlquiler.save(alquiler);
 	            
-	            int idVehiculo = alquiler.getVehiculo().getIdVehiculo();
+	            Long idVehiculo = alquiler.getVehiculo().getIdVehiculo();
 	            RepoVehiculos.estadoDispo("Alquilado", idVehiculo);
 	            return ResponseEntity.ok("Reserva confirmada y vehículo marcado como alquilado.");
   
@@ -129,10 +188,10 @@ public class AlquileresControlador {
 	
 	
 	
-	@PostMapping("/VehiculoAlquilado")
+	@GetMapping("/VehiculoAlquilado")
 	public ResponseEntity<?> ListaVehiAlqui(){
 		try {
-	        List<Object> lista = repositorioAlquiler.ListaAlqui();
+	        List<Object[]> lista = repositorioAlquiler.ListaAlqui();
 	        return ResponseEntity.ok(lista);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
