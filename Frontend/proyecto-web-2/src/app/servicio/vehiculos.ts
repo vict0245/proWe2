@@ -17,4 +17,13 @@ export class VehiculosServicio {
     this.dato=true;
     return this.httpClient.post(`${this.bdURL1}`,vehiculos);
    }
+
+   private bdURL2 = "http://localhost:8080/gestionAlquiler/estadoEntregado";
+   registrarGestion(idAlquiler: number, idAdministrador: number): Observable<object>{
+    const params = {
+      idAlquiler: idAlquiler.toString(),
+    idAdministrador: idAdministrador.toString()
+    };
+    return this.httpClient.put(`${this.bdURL2}`,null,{params});
+   }
 }

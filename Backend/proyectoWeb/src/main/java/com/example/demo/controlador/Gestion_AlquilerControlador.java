@@ -2,12 +2,15 @@ package com.example.demo.controlador;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,6 +29,7 @@ import com.example.demo.repositorio.VehiculosRepositorio;
 
 @RestController
 @RequestMapping("/gestionAlquiler")
+@CrossOrigin(origins = "http://localhost:4200")
 public class Gestion_AlquilerControlador {
 	
 	@Autowired
@@ -67,7 +71,9 @@ public class Gestion_AlquilerControlador {
 	    repositorioGestion.save(gestion);
 	    
 
-	    return ResponseEntity.ok("Vehículo entregado correctamente");
+	    Map<String, String> respuesta = new HashMap<>();
+	    respuesta.put("mensaje", "Vehículo entregado correctamente");
+	    return ResponseEntity.ok(respuesta);
 	}
 	
 	@PutMapping("/estadoDevuelto")

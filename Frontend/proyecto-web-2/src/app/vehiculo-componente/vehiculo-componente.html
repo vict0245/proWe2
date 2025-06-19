@@ -54,4 +54,35 @@
   </div>
 </div>
 
+<button type="button" class="btn btn-primary btn-lg" (click)="abrirgestion()">Gestiona Entrega</button>
+<button type="button" class="btn btn-secondary btn-lg" (click)="gestiondevolucion()">Gestiona Devolucion</button>
 
+<div class="modal" tabindex="-1" role="dialog" id="gestionformulario">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Registro</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarRegistro()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formRegistro">
+          <div class="form-group">
+            <label for="idAlquiler">ID del Alquiler</label>
+            <input type="text" class="form-control" id="idAlquiler" [(ngModel)]="idAlquiler" name="idAlquiler" required>
+          </div>
+          <div class="form-group">
+            <label for="idAdministrador">ID del Administrador</label>
+            <input type="text" class="form-control" id="idAdministrador" [(ngModel)]="idAdministrador" name="idAdministrador" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="guardarGestion()">Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cerrarRegistro()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+          
