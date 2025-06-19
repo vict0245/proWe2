@@ -1,0 +1,36 @@
+body {
+  background: linear-gradient(to right, #434343, #a4a4a4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+.welcome-container {
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 40px;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
+}
+.welcome-container h1 {
+  margin-bottom: 20px;
+}
+.welcome-container p {
+  margin-bottom: 30px;
+}
+.welcome-container .btn {
+  margin: 5px;
+}
+
+.container{
+    height: 100vh;
+    width: 100vw;
+}
+
+.gradient-custom{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

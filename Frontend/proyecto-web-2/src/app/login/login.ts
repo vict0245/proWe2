@@ -1,11 +1,14 @@
+import { RouterOutlet } from '@angular/router';
 import { Usuario } from './../entidades/usuario';
 import { LoginServicio } from './../servicio/login';
 import { Component, OnInit } from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import { Router } from '@angular/router';
+import { log } from 'console';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterOutlet],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -13,7 +16,7 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
   usuario: Usuario = new Usuario();
-  constructor(private loginServicio: LoginServicio) {}
+  constructor(private loginServicio: LoginServicio, private route:Router) {}
 
   OnInit(): void {
     this.abrirLogin_Usua();
@@ -48,12 +51,27 @@ export class LoginComponent {
     }
   }
 
+  cerrarLogin(){
+    const loginAd = document.getElementById("login-Administrador");
+    const loginUs = document.getElementById("login-usuario");
+    const reguisUs = document.getElementById("registro-usuario");
+    
+    if(loginAd!=null && loginUs!=null && reguisUs!=null){
+      loginAd.style.display = "none";
+      loginUs.style.display = "none";
+      reguisUs.style.display = "none";
+    }
+  }
+
   loginUsua(){
     this.loginServicio.loginUsuario(this.email,this.password).subscribe({
       next: (response) => {
         switch(response) {
           case true:
-            alert("Login correcto bienvenido administrador "+response);
+            alert("Login correcto bienvenido Usuario "+response);
+            this.limpiarCampos();
+            this.route.navigate(['/bannerUsuario']);
+            this.cerrarLogin();
             break;
           case false:
             alert("Login incorrecto compruebe email o contraseña "+response);
@@ -66,8 +84,7 @@ export class LoginComponent {
         }
       }
       , error: (error) => {console.error("Login failed", error);}})
-      this.limpiarCampos();
-  }
+    }
 
   loginAdmin(){
     console.log("email: ", this.email, " password: ", this.password);
@@ -76,6 +93,9 @@ export class LoginComponent {
         switch(response) {
           case true:
             alert("Login correcto bienvenido administrador "+response);
+            this.limpiarCampos();
+            this.cerrarLogin();
+            this.route.navigate(['/bannerAdministrador']);
             break;
           case false:
             alert("Login incorrecto compruebe email o contraseña "+response);
@@ -85,10 +105,10 @@ export class LoginComponent {
             break;
           default:
             alert("Error desconocido, por favor intente más tarde.");
+            break;
         }
       }
       , error: (error) => {console.error("Login failed", error);}})
-      this.limpiarCampos();
   }
 
   limpiarCampos() {
@@ -109,10 +129,10 @@ export class LoginComponent {
   }
 
   registrarUsuario() {
-    alert("Funcionalidad de registro aún no implementada.");
     this.loginServicio.reguistrarUsuario(this.usuario).subscribe({
       next: (response) => {
         if (response) {
+          alert("Usuario registrado correctamente, por favor inicie sesión.");
         } else {
           alert("Error al registrar usuario, por favor intente más tarde.");
         }
