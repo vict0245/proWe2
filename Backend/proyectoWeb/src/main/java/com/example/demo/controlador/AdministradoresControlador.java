@@ -23,16 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.modelo.Administradores;
 import com.example.demo.modelo.Gestion_Alquiler;
-<<<<<<< HEAD
 import com.example.demo.modelo.Vehiculos;
 import com.example.demo.repositorio.AdministradoresRepositorio;
-=======
 import com.example.demo.modelo.Usuarios;
 import com.example.demo.modelo.Vehiculos;
 import com.example.demo.modelo.credenciales;
 import com.example.demo.repositorio.AdministradoresRepositorio;
 import com.example.demo.repositorio.AlquileresRepositorio;
->>>>>>> master
 import com.example.demo.repositorio.VehiculosRepositorio;
 
 
@@ -136,14 +133,13 @@ public class AdministradoresControlador {
 			
 	}
 	
-<<<<<<< HEAD
 	@PostMapping("/cambiarEstadoVehiclo")
 	public void cambiarEstadoVehiclo(@RequestParam Long id,@RequestParam String nuevoEstado) {
 		Vehiculos v = this.repositorioA.estadoVehiculo(id);
 		v.setEstado(nuevoEstado);
 		vehRepo.save(v);
 	}
-=======
+
 	@PostMapping("/añadirvehiculo")
 	public ResponseEntity<?> añadirvehiculo(@RequestBody Vehiculos vehiculos){
 		try {
@@ -158,5 +154,4 @@ public class AdministradoresControlador {
 		}
 	}
 	
->>>>>>> master
 }

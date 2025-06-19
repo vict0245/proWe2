@@ -65,7 +65,7 @@ public class Gestion_AlquilerControlador {
 	    gestion.setFechaAccion(LocalDate.now());
 	    gestion.setAlquiler(alquiler);
 
-	    Administradores admin = repositorioA.findByIdAdministrador(idAdministrador).get(); // Temporal
+	    Administradores admin = repositorioA.findById(idAdministrador).get(); // Temporal
 	    gestion.setAdministrador(admin);
 
 	    repositorioGestion.save(gestion);
@@ -111,7 +111,7 @@ public class Gestion_AlquilerControlador {
 	    gestion.setFechaAccion(fechaActual);
 	    gestion.setAlquiler(alquiler);
 
-	    Administradores admin = repositorioA.findByIdAdministrador(1L).get(); // Temporal
+	    Administradores admin = repositorioA.findById(1L).get(); // Temporal
 	    gestion.setAdministrador(admin);
 
 	    repositorioGestion.save(gestion);
@@ -123,7 +123,7 @@ public class Gestion_AlquilerControlador {
 		ResponseEntity<?> registroAccion(@RequestParam Long idAlquiler, @RequestParam Long idAdministrador, @RequestParam String accion ){
 		try {
 		Optional<Alquileres> Alquilertengo = repositorioAlquiler.findById(idAlquiler);
-		Optional<Administradores> Administradortengo = repositorioA.findByIdAdministrador(idAdministrador);
+		Optional<Administradores> Administradortengo = repositorioA.findById(idAdministrador);
 		
 		if(Alquilertengo.isPresent() && Administradortengo.isPresent()) {
 			LocalDate fechahoy = LocalDate.now();

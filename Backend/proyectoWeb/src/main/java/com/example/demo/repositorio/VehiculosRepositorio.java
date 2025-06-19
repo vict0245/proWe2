@@ -1,16 +1,11 @@
 package com.example.demo.repositorio;
 
-<<<<<<< HEAD
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.modelo.Vehiculos;
-
-public interface VehiculosRepositorio extends JpaRepository<Vehiculos,Long>{
-=======
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
->>>>>>> master
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
