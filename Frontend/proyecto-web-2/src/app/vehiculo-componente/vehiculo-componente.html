@@ -2,10 +2,10 @@
 <p>vehiculos works!</p>
 
 <div class="text-center mt-4">
-  <button type="button" class="btn btn-primary btn-lg" (click)="abrirRegistroVehiculo()">Registrar</button>
+  <button type="button" class="btn btn-primary btn-lg" (click)="abrirRegistroVehiculo()">Registrar Vehiculos</button>
 </div>
 
-<div class="modal" tabindex="-1" role="dialog" id="registro">
+<div class="modal" tabindex="-1" style="display: none;" role="dialog" id="registro">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -54,15 +54,15 @@
   </div>
 </div>
 
-<button type="button" class="btn btn-primary btn-lg" (click)="abrirgestion()">Gestiona Entrega</button>
-<button type="button" class="btn btn-secondary btn-lg" (click)="gestiondevolucion()">Gestiona Devolucion</button>
+<button type="button" class="btn btn-primary btn-lg" (click)="abrirgestionentregado()">Gestiona Entrega</button>
+<button type="button" class="btn btn-secondary btn-lg" (click)="abrirgestiondevuelto()">Gestiona Devolucion</button>
 
-<div class="modal" tabindex="-1" role="dialog" id="gestionformulario">
+<div class="modal" tabindex="-1" style="display: none;" role="dialog" id="gestionformulario">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Registro</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarRegistro()">
+        <h5 class="modal-title">Gestionar Entrega de Vehiculo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarRegistrogestionentregado()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -80,7 +80,33 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="guardarGestion()">Guardar</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cerrarRegistro()">Cerrar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cerrarRegistrogestionentregado()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" tabindex="-1"  style="display: none;" role="dialog" id="gestionformulario2">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Gestionar devolucion del vehiculo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarRegistrogestiondevuelto()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formRegistro">
+          <div class="form-group">
+            <label for="idAlquiler">ID del Alquiler</label>
+            <input type="text" class="form-control" id="idAlquiler" [(ngModel)]="idAlquiler" name="idAlquiler" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="guardargestiondevolucion()">Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cerrarRegistrogestiondevuelto()">Cerrar</button>
       </div>
     </div>
   </div>

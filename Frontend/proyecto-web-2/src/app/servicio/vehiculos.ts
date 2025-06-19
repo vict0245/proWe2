@@ -26,4 +26,12 @@ export class VehiculosServicio {
     };
     return this.httpClient.put(`${this.bdURL2}`,null,{params});
    }
+   private bdURL3 = "http://localhost:8080/gestionAlquiler/estadoDevuelto";
+   registrarGestionDevuelto(idAlquiler: number): Observable<object>{
+    const params = {
+      idAlquiler: idAlquiler.toString()
+    };
+    return this.httpClient.put(`${this.bdURL3}`,null,{params});
+   }
 }
+

@@ -1,0 +1,105 @@
+/* Estilo general del body */
+body {
+  background-color: #f4f6f8;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Botones principales */
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-bottom: 15px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-left: 18px;
+}
+
+.btn-secondary:hover {
+  background-color: #565e64;
+}
+
+/* Centrado y margen para botones */
+.text-center.mt-4 {
+  margin-top: 30px;
+}
+
+/* Estilo de los modales */
+.modal-content {
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  background-color: #007bff;
+  color: white;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+
+
+.modal-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.modal-body {
+  background-color: #f9f9f9;
+  padding: 20px;
+}
+
+.modal-footer {
+  background-color: #f1f1f1;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 15px;
+}
+
+/* Formulario y campos */
+.form-group label {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 10px;
+  transition: box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Responsive modal size */
+@media (max-width: 768px) {
+  .modal-dialog {
+    max-width: 90%;
+    
+  }
+
+}
+.modal-dialog {
+  max-width: 500px;
+  margin: 1.75rem auto;
+}
+

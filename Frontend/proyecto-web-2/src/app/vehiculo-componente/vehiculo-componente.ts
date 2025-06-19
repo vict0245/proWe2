@@ -52,14 +52,40 @@ export class VehiculoComponente implements OnInit {
 gestionentrega(){
 
 }
-gestiondevolucion(){
+guardargestiondevolucion(){
+  this.servicio.registrarGestionDevuelto(this.idAlquiler).subscribe(dato => {
+    if(dato!= null){
+      alert("vehiculo devuelto correctamente");
+      this.cerrarRegistro();
+      this.ngOnInit();
+    }else{
+      alert("Error al devolver el vehiculo")
+    }
+  })
 
 }
-abrirgestion(){
+abrirgestionentregado(){
   const modal = document.getElementById("gestionformulario");
     if (modal != null)
        modal.style.display = 'block';
 }
+abrirgestiondevuelto(){
+  const modal = document.getElementById("gestionformulario2");
+    if (modal != null)
+       modal.style.display = 'block';
+}
+cerrarRegistrogestiondevuelto() {
+    const modal = document.getElementById("gestionformulario2");
+    if (modal != null) 
+      modal.style.display = 'none';
+  }
+
+ cerrarRegistrogestionentregado() {
+    const modal = document.getElementById("gestionformulario");
+    if (modal != null) 
+      modal.style.display = 'none';
+  }
+
 guardarGestion(){
     this.servicio.registrarGestion(this.idAlquiler, this.idAdministrador).subscribe(dato => {
       if(dato!=null){

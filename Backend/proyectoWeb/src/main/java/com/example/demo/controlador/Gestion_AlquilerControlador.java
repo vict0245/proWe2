@@ -81,7 +81,7 @@ public class Gestion_AlquilerControlador {
 	    Optional<Alquileres> alquilerRevision = repositorioAlquiler.findById(idAlquiler);
 
 	    if (alquilerRevision.isEmpty()) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alquiler no encontrado");
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 	    }
 
 	    Alquileres alquiler = alquilerRevision.get();
@@ -119,7 +119,7 @@ public class Gestion_AlquilerControlador {
 
 	    repositorioGestion.save(gestion);
 
-	    return ResponseEntity.ok("Vehículo devuelto correctamente. Total: $" + nuevoTotal);
+	    return ResponseEntity.ok(true);
 	}
 	  
 	@PostMapping("/RegistrarAccion")
