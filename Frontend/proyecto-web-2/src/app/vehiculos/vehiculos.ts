@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './vehiculos.html',
   styleUrl: './vehiculos.css'
 })
-export class VehiculosComponent implements OnInit {
+export class VehiculosCompone implements OnInit {
 
   ngOnInit(): void {
       

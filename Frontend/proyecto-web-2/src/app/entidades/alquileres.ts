@@ -1,14 +1,11 @@
-import { Vehiculos } from "./vehiculos";
-
 export class Alquileres {
-
-    vehiculos: Vehiculos;
+    idAlquiler: number;
+    idUsuario: number;
+    idVehiculo: number;
     fechaInicio: Date;
     fechaFin: Date;
-    estado: String;
+    estado: string;
     valorTotal: number;
-    valorAdicion: number
+    valorAdicional: number;
     fechaEntregaReal: Date;
-
-
 }

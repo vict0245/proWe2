@@ -1,10 +1,17 @@
-export class Vehiculos {
+import { Injectable } from '@angular/core';
 
-      placa: String; 
-      marca: String;
-      modelo: String;
-      color: String;
-      estado: String;
-      valorAlquilerDia: number;
-     tipo: String;
+@Injectable({
+  providedIn: 'root'
+})
+export class Vehiculos {
+    idVehiculo:number;
+    placa:string;
+    marca:string;
+    modelo:string;
+    color:string;
+    estado:string;
+    valorAlquilerDia:number;
+    tipo:string;
+
+  constructor() { }
 }

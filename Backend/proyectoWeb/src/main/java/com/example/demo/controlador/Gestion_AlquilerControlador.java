@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -29,7 +31,11 @@ import com.example.demo.repositorio.VehiculosRepositorio;
 
 @RestController
 @RequestMapping("/gestionAlquiler")
+<<<<<<< HEAD
 @CrossOrigin(origins = "http://localhost:4200/")
+=======
+@CrossOrigin(origins = "http://localhost:4200")
+>>>>>>> juan-david
 public class Gestion_AlquilerControlador {
 	
 	@Autowired
@@ -71,7 +77,9 @@ public class Gestion_AlquilerControlador {
 	    repositorioGestion.save(gestion);
 	    
 
-	    return ResponseEntity.ok("Vehículo entregado correctamente");
+	    Map<String, String> respuesta = new HashMap<>();
+	    respuesta.put("mensaje", "Vehículo entregado correctamente");
+	    return ResponseEntity.ok(respuesta);
 	}
 	
 	@PutMapping("/estadoDevuelto")
@@ -79,7 +87,7 @@ public class Gestion_AlquilerControlador {
 	    Optional<Alquileres> alquilerRevision = repositorioAlquiler.findById(idAlquiler);
 
 	    if (alquilerRevision.isEmpty()) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alquiler no encontrado");
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 	    }
 
 	    Alquileres alquiler = alquilerRevision.get();
@@ -116,7 +124,7 @@ public class Gestion_AlquilerControlador {
 
 	    repositorioGestion.save(gestion);
 
-	    return ResponseEntity.ok("Vehículo devuelto correctamente. Total: $" + nuevoTotal);
+	    return ResponseEntity.ok(true);
 	}
 	  
 	@PostMapping("/RegistrarAccion")

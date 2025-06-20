@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.GetMapping;
+=======
+>>>>>>> juan-david
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +39,10 @@ import com.example.demo.repositorio.VehiculosRepositorio;
 @RestController
 @RequestMapping("/administradores")
 @CrossOrigin(origins = "http://localhost:4200/")
+<<<<<<< HEAD
+=======
+
+>>>>>>> juan-david
 public class AdministradoresControlador {
 	
 	@Autowired

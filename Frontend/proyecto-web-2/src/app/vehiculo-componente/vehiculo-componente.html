@@ -1,0 +1,114 @@
+<p>vehiculo-componente works!</p>
+<p>vehiculos works!</p>
+
+<div class="text-center mt-4">
+  <button type="button" class="btn btn-primary btn-lg" (click)="abrirRegistroVehiculo()">Registrar Vehiculos</button>
+</div>
+
+<div class="modal" tabindex="-1" style="display: none;" role="dialog" id="registro">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Registro</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarRegistro()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formRegistro">
+          <div class="form-group">
+            <label for="placa">Placa</label>
+            <input type="text" class="form-control" id="placa" [(ngModel)]="vehiculoV.placa" name="placa" required>
+          </div>
+          <div class="form-group">
+            <label for="marca">Marca</label>
+            <input type="text" class="form-control" id="marca" [(ngModel)]="vehiculoV.marca" name="marca" required>
+          </div>
+          <div class="form-group">
+            <label for="modelo">Modelo</label>
+            <input type="text" class="form-control" id="modelo" [(ngModel)]="vehiculoV.modelo" name="modelo" required>
+          </div>
+          <div class="form-group">
+            <label for="color">Color</label>
+            <input type="email" class="form-control" id="color" [(ngModel)]="vehiculoV.color" name="color" required>
+          </div>
+          <div class="form-group">
+            <label for="estado">Estado</label>
+            <input type="estado" class="form-control" id="estado" [(ngModel)]="vehiculoV.estado" name="estado" required>
+          </div>
+          <div class="form-group">
+            <label for="valorAlquilerDia">Valor alquiler por dia</label>
+            <input type="valorAlquilerDia" class="form-control" id="valorAlquilerDia" [(ngModel)]="vehiculoV.valorAlquilerDia" name="valorAlquilerDia" required>
+          </div>
+          <div class="form-group">
+            <label for="tipo">Tipo de automovil</label>
+            <input type="tipo" class="form-control" id="tipo" [(ngModel)]="vehiculoV.tipo" name="tipo" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="guardarVehiculo()">Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cerrarRegistro()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="btn btn-primary btn-lg" (click)="abrirgestionentregado()">Gestiona Entrega</button>
+<button type="button" class="btn btn-secondary btn-lg" (click)="abrirgestiondevuelto()">Gestiona Devolucion</button>
+
+<div class="modal" tabindex="-1" style="display: none;" role="dialog" id="gestionformulario">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Gestionar Entrega de Vehiculo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarRegistrogestionentregado()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formRegistro">
+          <div class="form-group">
+            <label for="idAlquiler">ID del Alquiler</label>
+            <input type="text" class="form-control" id="idAlquiler" [(ngModel)]="idAlquiler" name="idAlquiler" required>
+          </div>
+          <div class="form-group">
+            <label for="idAdministrador">ID del Administrador</label>
+            <input type="text" class="form-control" id="idAdministrador" [(ngModel)]="idAdministrador" name="idAdministrador" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="guardarGestion()">Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cerrarRegistrogestionentregado()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" tabindex="-1"  style="display: none;" role="dialog" id="gestionformulario2">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Gestionar devolucion del vehiculo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarRegistrogestiondevuelto()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formRegistro">
+          <div class="form-group">
+            <label for="idAlquiler">ID del Alquiler</label>
+            <input type="text" class="form-control" id="idAlquiler" [(ngModel)]="idAlquiler" name="idAlquiler" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="guardargestiondevolucion()">Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cerrarRegistrogestiondevuelto()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+          
