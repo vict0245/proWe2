@@ -195,6 +195,18 @@ public class AlquileresControlador {
 		}
 	}
 	
+	@GetMapping("/listarVehiculosAlquilados")
+	public ResponseEntity<?> listarVehiculosAlquilados(){
+		try {
+	        List<Object[]> vehiculos = repositorioAlquiler.ListaAlquii();
+	        return ResponseEntity.ok(vehiculos);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(null);
+			
+		}
+	}
+	
 	@PostMapping("/valorTotal")
 	public ResponseEntity<?> calcularValorTotal(@RequestParam Long id,
 	                                            @RequestParam LocalDate fechaInicio,

@@ -6,6 +6,7 @@ import { Alquileres } from '../entidades/alquileres';
 import { Gestionalquiler } from '../entidades/gestionalquiler';
 
 @Component({
+  standalone: true,
   selector: 'app-vehiculo-componente',
   imports: [FormsModule],
   templateUrl: './vehiculo-componente.html',

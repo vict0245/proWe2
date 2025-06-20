@@ -6,6 +6,7 @@ import { AlquileresServicio } from '../servicio/alquileres';
 import { FormsModule } from '@angular/forms';
 
 @Component({
+  standalone: true,
   selector: 'app-alquileres',
   imports: [CommonModule,FormsModule],
   templateUrl: './alquileres.html',
@@ -29,11 +30,12 @@ export class AlquileresComponent implements OnInit {
   }
   private verAlquiler(){
   this.alquilerservicio.ObtenerListaVehiculos().subscribe((dato: any[]) => {
-this.vehiculos = dato.map(item => ({
-  id: item[0],                    
-  modelo: item[1],
-  tipo: item[2],
-  valorAlquilerDia: item[3]
+    console.log(dato)
+    this.vehiculos = dato.map(item => ({
+    id: item[0],                    
+    modelo: item[1],
+    tipo: item[2],
+    valorAlquilerDia: item[3]
 }));
 
 });
@@ -42,7 +44,6 @@ this.vehiculos = dato.map(item => ({
 
 verAlquilado(){
   this.alquilerservicio.obtenerListaAlquilados().subscribe(dato => {
-    console.log(dato);
     this.alquiler = dato.map((item: any[]) => ({
       placa: item[0],
       marca: item[1],

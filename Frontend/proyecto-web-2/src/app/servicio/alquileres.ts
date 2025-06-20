@@ -40,7 +40,7 @@ guardarReserva(reserva: any): Observable<any> {
   });
 }
 
-private bdURLC = "http://localhost:8080/alquiler/VehiculoAlquilado"
+private bdURLC = "http://localhost:8080/alquiler/listarVehiculosAlquilados"
 obtenerListaAlquilados(): Observable<any>{
   return this.httpClient.get<any>(this.bdURLC)
 }

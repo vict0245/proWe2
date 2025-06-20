@@ -4,9 +4,11 @@ import { LoginServicio } from './../servicio/login';
 import { Component, OnInit } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import { Router } from '@angular/router';
-import { log } from 'console';
+import { TransDatosService } from '../servicio/trans-datos';
+
 
 @Component({
+  standalone: true,
   selector: 'app-login',
   imports: [FormsModule, RouterOutlet],
   templateUrl: './login.html',
@@ -16,7 +18,7 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
   usuario: Usuario = new Usuario();
-  constructor(private loginServicio: LoginServicio, private route:Router) {}
+  constructor(private loginServicio: LoginServicio, private route:Router, private transfer:TransDatosService) {}
 
   OnInit(): void {
     this.abrirLogin_Usua();
@@ -69,6 +71,8 @@ export class LoginComponent {
         switch(response) {
           case true:
             alert("Login correcto bienvenido Usuario "+response);
+            console.log("Email: ", this.email);
+            this.enviar();
             this.limpiarCampos();
             this.route.navigate(['/bannerUsuario']);
             this.cerrarLogin();
@@ -93,6 +97,7 @@ export class LoginComponent {
         switch(response) {
           case true:
             alert("Login correcto bienvenido administrador "+response);
+            this.enviar();
             this.limpiarCampos();
             this.cerrarLogin();
             this.route.navigate(['/bannerAdministrador']);
@@ -142,5 +147,9 @@ export class LoginComponent {
         alert("Error al registrar usuario, por favor intente más tarde.");
       }
     })
+  }
+
+  enviar() {
+    this.transfer.enviarDatos({ email: this.email });
   }
 }
