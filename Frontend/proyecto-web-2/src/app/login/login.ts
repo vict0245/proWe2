@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import { Router } from '@angular/router';
 import { TransDatosService } from '../servicio/trans-datos';
+import { Admin } from '../entidades/admin';
 
 
 @Component({
@@ -15,9 +16,11 @@ import { TransDatosService } from '../servicio/trans-datos';
   styleUrl: './login.css'
 })
 export class LoginComponent {
-  email: string = '';
+  usuarioA:string = '';
+  identificacion: string = '';
   password: string = '';
   usuario: Usuario = new Usuario();
+  admin:Admin = new Admin();
   constructor(private loginServicio: LoginServicio, private route:Router, private transfer:TransDatosService) {}
 
   OnInit(): void {
@@ -27,12 +30,17 @@ export class LoginComponent {
   abrirLogin_Admin(){
     const loginAd = document.getElementById("login-Administrador");
     const loginUs = document.getElementById("login-usuario");
+    const reguisAd = document.getElementById("registro-admin");
+    
 
     if(loginAd != null){
       if(loginUs != null){
         loginUs.style.display = "none";
+      }if(reguisAd != null){
+        reguisAd.style.display = "none";
       }
       loginAd.style.display = "block";
+      
     }
   }
 
@@ -66,13 +74,13 @@ export class LoginComponent {
   }
 
   loginUsua(){
-    this.loginServicio.loginUsuario(this.email,this.password).subscribe({
+    this.loginServicio.loginUsuario(this.identificacion,this.password).subscribe({
       next: (response) => {
         switch(response) {
           case true:
             alert("Login correcto bienvenido Usuario "+response);
-            console.log("Email: ", this.email);
-            this.enviar();
+            console.log("identificacion: ", this.identificacion);
+            this.enviar(this.identificacion);
             this.limpiarCampos();
             this.route.navigate(['/bannerUsuario']);
             this.cerrarLogin();
@@ -91,13 +99,13 @@ export class LoginComponent {
     }
 
   loginAdmin(){
-    console.log("email: ", this.email, " password: ", this.password);
-    this.loginServicio.loginAdmin(this.email,this.password).subscribe({
+    console.log("identificacion: ", this.usuarioA, " password: ", this.password);
+    this.loginServicio.loginAdmin(this.usuarioA,this.password,true).subscribe({
       next: (response) => {
         switch(response) {
           case true:
             alert("Login correcto bienvenido administrador "+response);
-            this.enviar();
+            this.enviar(this.usuarioA);
             this.limpiarCampos();
             this.cerrarLogin();
             this.route.navigate(['/bannerAdministrador']);
@@ -117,11 +125,12 @@ export class LoginComponent {
   }
 
   limpiarCampos() {
-    this.email = '';
+    this.usuarioA = '';
+    this.identificacion = '';
     this.password = '';
   }
 
-  abrirRegistro() {
+  abrirRegistroUsa() {
     const reguisUs = document.getElementById("registro-usuario");
     const loginUs = document.getElementById("login-usuario");
 
@@ -130,6 +139,18 @@ export class LoginComponent {
         loginUs.style.display = "none";
       }
       reguisUs.style.display = "block";
+    }
+  }
+
+  abrirRegistroAdmin() {
+    const reguisAd = document.getElementById("registro-admin");
+    const loginAd = document.getElementById("login-Administrador");
+
+    if(reguisAd != null){
+      if(loginAd != null){
+        loginAd.style.display = "none";
+      }
+      reguisAd.style.display = "block";
     }
   }
 
@@ -149,7 +170,24 @@ export class LoginComponent {
     })
   }
 
-  enviar() {
-    this.transfer.enviarDatos({ email: this.email });
+  registrarAdmin(){
+    console.log("Registro de administrador: ", this.admin);
+    this.loginServicio.reguistrarAdministrador(this.admin).subscribe({
+      next: (response) => {
+        if (response) {
+          alert("Administrador registrado correctamente, por favor inicie sesión.");
+        } else {
+          alert("Error al registrar Administrador, intente de nuevo.");
+        }
+      } ,
+      error: (error) => {
+        console.error("Registro failed", error);
+        alert("Error al registrar Administrador, por favor intente más tarde.");
+      }
+    })
+  }
+
+  enviar(dato: any = null) {
+    this.transfer.enviarDatos(dato);
   }
 }

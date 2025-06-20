@@ -19,12 +19,12 @@ public class Usuarios {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idUsuario;
-
+    @Column(unique = true, nullable = false)
+    private String identificacion;
     private String nombre;
     private LocalDate fechaExpedicion;
     private String categoria;
     private LocalDate vigencia;
-    @Column(unique = true, nullable = false)
     private String email;
     private String telefono;
     private String password;
@@ -35,9 +35,11 @@ public class Usuarios {
     // metOdos
 
     // constructor
-	public Usuarios(String nombre, LocalDate fechaExpedicion, String categoria, LocalDate vigencia,
-			String email, String telefono, String password, List<Alquileres> alquileres) {
+	public Usuarios(String identificacion, String nombre, LocalDate fechaExpedicion, String categoria, LocalDate vigencia,
+			String email,String telefono, String password, List<Alquileres> alquileres) {
 		super();
+
+		this.identificacion = identificacion;
 		this.nombre = nombre;
 		this.fechaExpedicion = fechaExpedicion;
 		this.categoria = categoria;
@@ -95,12 +97,12 @@ public class Usuarios {
 		this.vigencia = vigencia;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getIdentificacion() {
+		return identificacion;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setIdentificacion(String email) {
+		this.identificacion = email;
 	}
 
 	public String getTelefono() {
@@ -126,5 +128,14 @@ public class Usuarios {
 	public void setAlquileres(List<Alquileres> alquileres) {
 		this.alquileres = alquileres;
 	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
     
+	
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Alquileres } from '../entidades/alquileres';
 import { HttpClient } from '@angular/common/http';
+import { LocalDate } from '@js-joda/core';
 
 @Injectable({
   providedIn: 'root'
@@ -17,21 +18,15 @@ ObtenerListaVehiculos(): Observable<any[]> {
   return this.httpClient.get<any[]>(this.bdURL);
 }
 
-private bdURLA ="http://localhost:8080/alquiler/verificarDisponibilidad"
-verificarDisponibilidad(fechaInicio: any, fechaFin: any): Observable<any> {
-  const inicio = new Date(fechaInicio);
-  const fin = new Date(fechaFin);
-
-  const url = `${this.bdURLA}?fechaInicio=${inicio.toISOString().split('T')[0]}&fechaFin=${fin.toISOString().split('T')[0]}`;
-  return this.httpClient.post(url, null, { responseType: 'text' });
+private bdURLA ="http://localhost:8080/alquiler/verificarDisponibilidadVehiculo"
+verificarDisponibilidad(id:number,fechaInicio: LocalDate, fechaFin: LocalDate): Observable<any> {
+return this.httpClient.post(`${this.bdURLA}`,{id,fechaInicio, fechaFin});
 
 }
 
-calcularValorTotal(idVehiculo: number, fechaInicio: any, fechaFin: any): Observable<any> {
-  const inicio = new Date(fechaInicio).toISOString().split('T')[0];
-  const fin = new Date(fechaFin).toISOString().split('T')[0];
-  const url = `http://localhost:8080/alquiler/valorTotal?id=${idVehiculo}&fechaInicio=${inicio}&fechaFin=${fin}`;
-  return this.httpClient.post(url, null, { responseType: 'text' });
+calcularValorTotal(id: number, fechaInicio: LocalDate, fechaFin: LocalDate): Observable<any> {
+  const url = `http://localhost:8080/alquiler/valorTotal`;
+  return this.httpClient.post(url,{id, fechaInicio, fechaFin});
 }
 
 guardarReserva(reserva: any): Observable<any> {

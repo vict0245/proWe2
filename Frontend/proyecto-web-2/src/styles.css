@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-.gradient-custom {
+body{
 /* fallback for old browsers */
 background: #2C2C2C;
 
@@ -8,4 +8,5 @@ background: -webkit-linear-gradient(to right, rgb(44, 44, 44), rgb(148, 137, 121
 
 /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 background: linear-gradient(to right, rgb(44, 44, 44), rgb(148, 137, 121));
+height: 100vh;
 }

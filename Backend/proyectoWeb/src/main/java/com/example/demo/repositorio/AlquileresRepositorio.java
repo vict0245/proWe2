@@ -54,7 +54,7 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres, Long> {
  	@Query(value = "SELECT v.placa, v.marca, v.modelo, a.id_usuario, a.fecha_inicio, a.fecha_fin, a.estado " +
             "FROM vehiculos v " +
             "INNER JOIN alquileres a ON v.id_vehiculo = a.id_vehiculo " +
-            "WHERE a.estado = 'Alquilado'", nativeQuery = true)
+            "WHERE v.estado = 'Alquilado'", nativeQuery = true)
 	public List<Object[]> ListaAlquii();
 
 
@@ -75,7 +75,7 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres, Long> {
 
     // Verifica disponibilidad de un vehículo entre fechas específicas
     @Query(value = "SELECT * FROM alquileres WHERE id_vehiculo = :idVehiculo AND estado = 'Alquilado' AND (fecha_inicio <= :fechaFin AND fecha_fin >= :fechaInicio)", nativeQuery = true)
-    List<Alquileres> verificarDisponibilidad(@Param("idVehiculo") Long idVehiculo, @Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
+    Alquileres verificarDisponibilidad(@Param("idVehiculo") Long idVehiculo, @Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
     // Lista todas las reservas con estado 'Alquilado'
     @Query(value = "SELECT * FROM alquileres WHERE estado = 'Alquilado'", nativeQuery = true)

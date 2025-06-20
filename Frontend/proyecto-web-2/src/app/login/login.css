@@ -1,3 +1,10 @@
 #quien{
     margin-top: 2vh;
 }
+
+#contInputs{
+    display: grid;
+    grid-template-columns: 45%  45%;
+    column-gap: 10%;
+    row-gap: 2vh;
+}

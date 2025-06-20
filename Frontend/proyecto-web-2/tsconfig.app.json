@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "moduleResolution": "node" // <-- Añade esta línea
   },
   "include": [
     "src/**/*.ts"
@@ -11,4 +12,3 @@
     "src/**/*.spec.ts"
   ]
 }
-

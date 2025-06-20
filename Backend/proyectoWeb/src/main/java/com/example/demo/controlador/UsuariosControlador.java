@@ -44,6 +44,11 @@ public class UsuariosControlador {
 		return this.repositorioU.findById(id);
 	}
 	
+	@PostMapping("/buscarPorIdentificacion")
+	public List<Usuarios> buscarPorIdentificacion(@RequestParam String identificacion){
+		return this.repositorioU.findByTelefono(identificacion);
+	}
+	
 	@PostMapping("/buscarPorNombre")
 	public List<Usuarios> buscarPorNombre(@RequestParam String nombre){
 		return this.repositorioU.findByNombre(nombre);
@@ -82,11 +87,11 @@ public class UsuariosControlador {
 	@PostMapping("/actualizar")
 	public Usuarios actualizar(@RequestBody Usuarios u) {
 		Usuarios usuaT = this.repositorioU.findById(u.getIdUsuario()).get();
+		usuaT.setIdentificacion(u.getIdentificacion());
 		usuaT.setNombre(u.getNombre());
 		usuaT.setFechaExpedicion(u.getFechaExpedicion());
 		usuaT.setCategoria(u.getCategoria());
 		usuaT.setVigencia(u.getVigencia());
-		usuaT.setEmail(u.getEmail());
 		usuaT.setTelefono(u.getTelefono());
 		
 		Usuarios actualizado = this.repositorioU.save(usuaT);
@@ -108,9 +113,9 @@ public class UsuariosControlador {
 	// TareasTrello
 		@PostMapping("/iniciar")
 		public Object iniciarSecionA(@RequestBody credenciales valores) {
-			String email = valores.getEmail();
+			String identificacion = valores.getIdentificacion();
 			String password = valores.getPassword();
-			Usuarios Apass=this.repositorioU.findByEmail(email);
+			Usuarios Apass=this.repositorioU.findByIdentificacion(identificacion);
 			
 			if(Apass!=null) {
 				if(encoder.matches(password,Apass.getPassword())) {

@@ -1,6 +1,3 @@
-<p>vehiculo-componente works!</p>
-<p>vehiculos works!</p>
-
 <div class="text-center mt-4">
   <button type="button" class="btn btn-primary btn-lg" (click)="abrirRegistroVehiculo()">Registrar Vehiculos</button>
 </div>
@@ -32,17 +29,26 @@
             <label for="color">Color</label>
             <input type="email" class="form-control" id="color" [(ngModel)]="vehiculoV.color" name="color" required>
           </div>
-          <div class="form-group">
-            <label for="estado">Estado</label>
-            <input type="estado" class="form-control" id="estado" [(ngModel)]="vehiculoV.estado" name="estado" required>
+          <div class="mb-3">
+            <label for="disabledSelect" class="form-label">select estado</label>
+            <select id="disabledSelect" class="form-select" [(ngModel)]="vehiculoV.estado" name="estado" required>
+              <option value="Disponible">Disponible</option>
+              <option value="Alquilado">Alquilado</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="valorAlquilerDia">Valor alquiler por dia</label>
             <input type="valorAlquilerDia" class="form-control" id="valorAlquilerDia" [(ngModel)]="vehiculoV.valorAlquilerDia" name="valorAlquilerDia" required>
           </div>
-          <div class="form-group">
-            <label for="tipo">Tipo de automovil</label>
-            <input type="tipo" class="form-control" id="tipo" [(ngModel)]="vehiculoV.tipo" name="tipo" required>
+          <div class="mb-3">
+            <label for="disabledSelect" class="form-label">select tipo</label>
+            <select id="disabledSelect" class="form-select" [(ngModel)]="vehiculoV.tipo" name="tipo" required>
+              <option value="automovil">automovil</option>
+              <option value="camioneta">camioneta</option>
+              <option value="campero">campero</option>
+              <option value="microbus">microbus</option>
+              <option value="motocicleta">motocicleta</option>
+            </select>
           </div>
         </form>
       </div>
@@ -54,7 +60,7 @@
   </div>
 </div>
 
-<button type="button" class="btn btn-primary btn-lg" (click)="abrirgestionentregado()">Gestiona Entrega</button>
+<button type="button" class="btn btn-secondary btn-lg" (click)="abrirgestionentregado()">Gestiona Entrega</button>
 <button type="button" class="btn btn-secondary btn-lg" (click)="abrirgestiondevuelto()">Gestiona Devolucion</button>
 
 <div class="modal" tabindex="-1" style="display: none;" role="dialog" id="gestionformulario">

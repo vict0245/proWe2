@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Alquileres } from '../entidades/alquileres';
-import { Vehiculos } from '../entidades/vehiculos';
 import { AlquileresServicio } from '../servicio/alquileres';
 import { FormsModule } from '@angular/forms';
 
@@ -17,12 +15,13 @@ export class AlquileresComponent implements OnInit {
  respuestaDisponibilidad: string = '';
   disponible: boolean | null = null;
   valorCalculado: String='';
-   alquileres: any = {} ;
-   alquiler: any[]=[];
-   vehiculos: any[] = [];
+  alquileres: any = {} ;
+  alquiler: any[]=[];
+  vehiculos: any[] = [];
+
     ngOnInit(): void {
-      this.verAlquiler();
-      this.verAlquilado();
+    this.verAlquiler();
+    this.verAlquilado();
       
   }
     constructor(private alquilerservicio: AlquileresServicio){
@@ -44,6 +43,7 @@ export class AlquileresComponent implements OnInit {
 
 verAlquilado(){
   this.alquilerservicio.obtenerListaAlquilados().subscribe(dato => {
+    console.log("Vehículos alquilados:", dato);
     this.alquiler = dato.map((item: any[]) => ({
       placa: item[0],
       marca: item[1],
@@ -61,7 +61,7 @@ abrir(item: any) {
   this.vehiculoSeleccionado = item;
   const modal = document.getElementById("actualizar");
    console.log("✅ Vehículo seleccionado:", this.vehiculoSeleccionado);
-  if (modal) modal.style.display = 'block';
+  if (modal!=null) modal.style.display = 'block';
 }
 
 
@@ -80,34 +80,32 @@ cerrar() {
 
 
 verificar() {
+  const v = this.vehiculoSeleccionado.id;
   const inicio = this.alquileres.fechaInicio;
   const fin = this.alquileres.fechaFin;
   this.valorCalculado = '';
-
-
 
   if (!inicio || !fin) {
     alert("Debes ingresar ambas fechas.");
     return;
   }
-
-  this.alquilerservicio.verificarDisponibilidad(inicio, fin).subscribe({
-    next: (res) => {
-      console.log("Respuesta del backend:", res);
-      alert(res);
-    },
-    error: (err) => {
-      console.error("Error del backend:", err);
-      alert("Ocurrió un error al verificar disponibilidad.");
+  console.log("ID:", v," Fecha Inicio:", inicio, "Fecha Fin:", fin);
+  this.alquilerservicio.verificarDisponibilidad(v,inicio, fin).subscribe(dato =>{
+    if(dato!=false){
+      this.respuestaDisponibilidad = "✅ El vehículo está disponible.";
+      this.disponible = true;
+    }else{
+      this.respuestaDisponibilidad = "❌ El vehículo no está disponible.";
+      this.disponible = false;
     }
-  });
+  })
 }
 mostrarResumen: boolean = false;
 
 calcularTotal() {
   const inicio = this.alquileres.fechaInicio;
   const fin = this.alquileres.fechaFin;
-  const id = this.vehiculoSeleccionado?.id;
+  const id = this.vehiculoSeleccionado.id;
 
   if (!inicio || !fin || !id) {
     this.valorCalculado = "Debes seleccionar el vehículo y las fechas.";
@@ -156,4 +154,29 @@ confirmarReserva() {
     }
   });
 }
+
+  verVehiculosAlquilados() {
+    const divAlquilados = document.getElementById("VehículosAlquilados");
+    const divDisponibles= document.getElementById("VehículosDisponibles");
+    console.log("modal", divAlquilados);
+    if (divAlquilados && divDisponibles) {
+      divDisponibles.style.display = "none";
+      divAlquilados.style.display = "block";
+    } else {
+      console.error("Modal no encontrado");
+    }
+  }
+
+  verVehiculosDisponibles(){
+    const divAlquilados = document.getElementById("VehículosAlquilados");
+    const divDisponibles= document.getElementById("VehículosDisponibles");
+    console.log("modal", divDisponibles);
+    if (divAlquilados && divDisponibles) {
+      divAlquilados.style.display = "none";
+      divDisponibles.style.display = "block";
+    } else {
+      console.error("Modal no encontrado");
+    }
+  }
+
 }

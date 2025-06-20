@@ -59,28 +59,18 @@ public class AdministradoresControlador {
 	}
 	
 	@PostMapping("/buscarPorId")
-	public Optional<Administradores> buscarPorId(@RequestParam Long id) {
+	public Optional<Administradores> buscarPorId(@RequestBody Long id) {
 		return this.repositorioA.findById(id);
 	}
 	
-	@PostMapping("/buscarPorNombre")
-	public List<Administradores> buscarPorNombre(@RequestParam String nombre){
-		return this.repositorioA.findByNombre(nombre);
-	}
-	
-	@PostMapping("/buscarPorTelefono")
-	public List<Administradores> buscarPorTelefono(@RequestParam String telefono){
-		return this.repositorioA.findByTelefono(telefono);
+	@PostMapping("/buscarPorUsuario")
+	public Administradores buscarPorNombre(@RequestBody String usuario){
+		return this.repositorioA.findByUsuario(usuario);
 	}
 	
 	@PostMapping("/buscarPorGestion")
 	public Administradores buscarPorGestion(@RequestBody Gestion_Alquiler gestion){
 		return this.repositorioA.findByGestiones(gestion);
-	}
-	
-	@PostMapping("/buscarPorEmail")
-	public Administradores buscarPorGestion(@RequestBody String email){
-		return this.repositorioA.findByEmail(email);
 	}
 	
 	@PostMapping("/eliminar")
@@ -91,35 +81,31 @@ public class AdministradoresControlador {
 	@PostMapping("/actualizar")
 	public Administradores actualizar(@RequestBody Administradores a) {
 		Administradores adminT = this.repositorioA.findById(a.getIdAdministrador()).get();
-		adminT.setNombre(a.getNombre());
+		adminT.setUsuario(a.getUsuario());
 		adminT.setPassword(encoder.encode(a.getPassword()));
-		adminT.setEmail(a.getEmail());
-		adminT.setTelefono(a.getTelefono());
 		adminT.setGestiones(a.getGestiones());
 		Administradores actualizado = this.repositorioA.save(adminT);
 		return actualizado;
 	}
 	
-	@PostMapping("guardar")
+	@PostMapping("/guardar")
 	public Object guardarA(@RequestBody Administradores a) {
 		try {
 			String encodepass = encoder.encode(a.getPassword());
 			a.setPassword(encodepass);
-			Administradores nuevoAdministrador = this.repositorioA.save(a);	
-			return nuevoAdministrador;
+			this.repositorioA.save(a);	
+			return true;
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(null);
+			return false;
 		}
 	}
 		
 	// TareasTrello
 	@PostMapping("/iniciar")
-	public Object iniciarSecionA(@RequestBody credenciales valores) {
-		String email = valores.getEmail();
-		String password = valores.getPassword();
-		Administradores Apass=this.repositorioA.findByEmail(email);
-		
+	public Object iniciarSecionA(@RequestBody Object[] valores) {
+		String usuario = (String)valores[0];
+		String password = (String)valores[1];
+		Administradores Apass=this.repositorioA.findByUsuario(usuario);
 		if(Apass!=null) {
 			if(encoder.matches(password,Apass.getPassword())) {
 				return true;
@@ -130,11 +116,12 @@ public class AdministradoresControlador {
 		else {
 			return null;
 		}
-			
 	}
 	
 	@PostMapping("/cambiarEstadoVehiclo")
-	public void cambiarEstadoVehiclo(@RequestParam Long id,@RequestParam String nuevoEstado) {
+	public void cambiarEstadoVehiclo(@RequestBody credenciales c) {
+		Long id = c.getId();
+		String nuevoEstado = c.getEstado();
 		Vehiculos v = this.repositorioA.estadoVehiculo(id);
 		v.setEstado(nuevoEstado);
 		vehRepo.save(v);
