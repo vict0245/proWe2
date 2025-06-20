@@ -14,6 +14,9 @@ import org.springframework.data.repository.query.Param;
 import com.example.demo.modelo.Vehiculos;
 
 public interface VehiculosRepositorio extends JpaRepository<Vehiculos, Long> {
+	
+	@Query(value="update vehiculo set estado = :estado where id_vehiculo = :id",nativeQuery=true)
+	void estadoDispo(@Param("estado")String estado,@Param("id")Long id_vehiculo);
 
     // Cambia el estado del vehículo (por ejemplo, de 'Disponible' a 'Alquilado')
     @Query(value = "UPDATE vehiculo SET estado = :estado WHERE id_vehiculo = :id", nativeQuery = true)

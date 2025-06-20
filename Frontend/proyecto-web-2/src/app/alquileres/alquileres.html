@@ -1,1 +1,111 @@
-<p>alquileres works!</p>
+<p class="h4">Vehículos Disponibles</p>
+
+<table class="table table-bordered mt-3">
+  <thead>
+    <tr>
+      <th>Modelo</th>
+      <th>Tipo</th>
+      <th>Valor Día</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of vehiculos">
+      <td>{{ item.modelo }}</td>
+      <td>{{ item.tipo }}</td>
+      <td>{{ item.valorAlquilerDia }}</td>
+      <td>
+        <button type="button" class="btn btn-primary btn-sm" (click)="abrir(item)">Seleccionar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Modal -->
+<div id="actualizar" class="modal" style="display: none; background-color: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%;">
+  <div class="modal-dialog" style="margin-top: 10%;">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Digite las fechas</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="cerrar()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Fecha Inicio</label>
+            <input type="date" class="form-control" [(ngModel)]="alquileres.fechaInicio" name="fechaInicio">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Fecha Fin</label>
+            <input type="date" class="form-control" [(ngModel)]="alquileres.fechaFin" name="fechaFin">
+          </div>
+        </form>
+
+        <!-- Mensajes -->
+        <div *ngIf="respuestaDisponibilidad" class="mt-2">
+          <div 
+            [ngClass]="{
+              'alert alert-success': disponible === true,
+              'alert alert-danger': disponible === false,
+              'alert alert-warning': disponible === null
+            }">
+            {{ respuestaDisponibilidad }}
+          </div>
+        </div>
+        <!-- Resumen de la Solicitud -->
+        <div *ngIf="mostrarResumen" class="mt-3">
+          <h5>Resumen de la Solicitud</h5>
+          <ul class="list-group">
+            <li class="list-group-item"><strong>Vehículo:</strong> {{ vehiculoSeleccionado.modelo }} ({{ vehiculoSeleccionado.tipo }})</li>
+            <li class="list-group-item"><strong>Fecha Inicio:</strong> {{ alquileres.fechaInicio }}</li>
+            <li class="list-group-item"><strong>Fecha Fin:</strong> {{ alquileres.fechaFin }}</li>
+            <li class="list-group-item"><strong>Total a Pagar:</strong> {{ valorCalculado }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrar()">Cerrar</button>
+        <button class="btn btn-primary" (click)="verificar()">Verificar Disponibilidad</button>
+        <button class="btn btn-success" (click)="calcularTotal()">Calcular Total</button>
+        <button class="btn btn-outline-success" *ngIf="mostrarResumen" (click)="confirmarReserva()">Confirmar Reserva</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<p class="h4">Vehículos Alquilados</p>
+
+<table class="table table-bordered mt-3">
+  <thead>
+    <tr>
+      <th>Placa</th>
+      <th>Marca</th>
+      <th>Modelo</th>
+      <th>Id_Cliente</th>
+      <th>Fecha Inicio</th>
+      <th>Fecha Fin</th>
+      <th>Estado Alquiler</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of alquiler">
+      <td>{{ item.placa }}</td>
+      <td>{{ item.marca }}</td>
+      <td>{{ item.modelo }}</td>
+      <td>{{ item.id_cliente }}</td>
+      <td>{{ item.fecha_inicio | date: 'yyyy-MM-dd' }}</td>
+      <td>{{ item.fecha_fin | date: 'yyyy-MM-dd' }}</td>
+      <td>{{ item.estado }}</td>
+      <td>
+        <button type="button" class="btn btn-primary btn-sm" (click)="abrir(item)">Cancelar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
