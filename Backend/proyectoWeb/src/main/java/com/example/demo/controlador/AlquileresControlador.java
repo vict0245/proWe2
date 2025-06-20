@@ -2,6 +2,8 @@ package com.example.demo.controlador;
 
 import java.util.Optional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -39,9 +41,9 @@ public class AlquileresControlador {
 
     // Calcular valor total del alquiler
     @PostMapping("/valorTotalAlquiler")
-    public ResponseEntity<?> Vta(@RequestParam int id,
-                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date FI,
-                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date FF) {
+    public ResponseEntity<?> Vta(@RequestParam Long id,
+                                 @RequestParam LocalDate FI,
+                                 @RequestParam LocalDate FF) {
         try {
             List<BigDecimal> valor = repositorioAlquiler.valorTotal(id, FI, FF);
             return ResponseEntity.ok(valor);
@@ -90,10 +92,10 @@ public class AlquileresControlador {
     }
 
     // Verificar disponibilidad de un vehículo entre fechas
-    @PostMapping("/verificarDisponibilidad")
-    public ResponseEntity<?> verificarDisponibilidad(@RequestParam int idVehiculo,
-                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
-                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin) {
+    @PostMapping("/verificarDisponibilidadVehiculo")
+    public ResponseEntity<?> verificarDisponibilidadd(@RequestParam Long idVehiculo,
+                                                     @RequestParam LocalDate fechaInicio,
+                                                     @RequestParam LocalDate fechaFin) {
         try {
             List<Alquileres> reservas = repositorioAlquiler.verificarDisponibilidad(idVehiculo, fechaInicio, fechaFin);
 
@@ -194,13 +196,13 @@ public class AlquileresControlador {
 	}
 	
 	@PostMapping("/valorTotal")
-	public ResponseEntity<?> calcularValorTotal(@RequestParam int id,
-	                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
-	                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin) {
+	public ResponseEntity<?> calcularValorTotal(@RequestParam Long id,
+	                                            @RequestParam LocalDate fechaInicio,
+	                                            @RequestParam LocalDate fechaFin) {
 	    try {
 	        BigDecimal valorDiario = repositorioAlquiler.obtenerValorDiario(id);
 
-	        long diferenciaDias = (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24) + 1;
+	        long diferenciaDias = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
 
 	        BigDecimal valorTotal = valorDiario.multiply(BigDecimal.valueOf(diferenciaDias));
 
@@ -211,10 +213,10 @@ public class AlquileresControlador {
 	    }
 	}
 	
-	@PostMapping("/verificarDisponibilidad")
+	@PostMapping("/verificarDisponibilidad1")
 	public ResponseEntity<?> verificarDisponibilidad(
-	    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
-	    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin) {
+	    @RequestParam LocalDate fechaInicio,
+	    @RequestParam LocalDate fechaFin) {
 
 	    try {
 	        System.out.println("Fecha Inicio recibida: " + fechaInicio);

@@ -1,6 +1,7 @@
 package com.example.demo.repositorio;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres, Long> {
 //El sistema calcula el costo total del alquiler basándose en el vehículo y el período.
 	
 	@Query(value = "SELECT valor_alquiler_dia FROM vehiculos WHERE id_vehiculo = :id", nativeQuery = true)
-	BigDecimal obtenerValorDiario(@Param("id") int idVehiculo);
+	BigDecimal obtenerValorDiario(@Param("id") Long idVehiculo);
 
 // El sistema presenta al cliente un resumen de la solicitud, incluyendo el vehículo, las fechas, el costo.
 	
@@ -45,8 +46,8 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres, Long> {
 		       "WHERE a.fechaInicio IS NOT NULL AND a.fechaFin IS NOT NULL " +
 		       "AND a.fechaInicio <= :fechaFin " +
 		       "AND a.fechaFin >= :fechaInicio")
-		List<Alquileres> verificarDisponibilidad(@Param("fechaInicio") Date fechaInicio,
-		                                         @Param("fechaFin") Date fechaFin);
+		List<Alquileres> verificarDisponibilidad(@Param("fechaInicio") LocalDate fechaInicio,
+		                                         @Param("fechaFin") LocalDate fechaFin);
                             
 // El sistema consulta la base de datos para identificar todas las reservas de alquiler cuyo estado indica 
 	//que el vehículo está actualmente alquilado o en posesión del cliente.
@@ -68,7 +69,7 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres, Long> {
 
     // Calcula el costo total del alquiler según vehículo y fechas
     @Query(value = "SELECT valor_total FROM alquileres v WHERE v.id_vehiculo = :id AND v.fecha_inicio = :FI AND v.fecha_fin = :FF", nativeQuery = true)
-    List<BigDecimal> valorTotal(@Param("id") int id_vehiculo, @Param("FI") Date fecha_inicio, @Param("FF") Date fecha_fin);
+    List<BigDecimal> valorTotal(@Param("id") Long id_vehiculo, @Param("FI") LocalDate fecha_inicio, @Param("FF") LocalDate fecha_fin);
 
     // Libera un vehículo (marca como disponible)
     @Query(value = "UPDATE vehiculos SET disponible = true WHERE id_vehiculo = :id", nativeQuery = true)
@@ -76,7 +77,7 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres, Long> {
 
     // Verifica disponibilidad de un vehículo entre fechas específicas
     @Query(value = "SELECT * FROM alquileres WHERE id_vehiculo = :idVehiculo AND estado = 'Alquilado' AND (fecha_inicio <= :fechaFin AND fecha_fin >= :fechaInicio)", nativeQuery = true)
-    List<Alquileres> verificarDisponibilidad(@Param("idVehiculo") int idVehiculo, @Param("fechaInicio") Date fechaInicio, @Param("fechaFin") Date fechaFin);
+    List<Alquileres> verificarDisponibilidad(@Param("idVehiculo") Long idVehiculo, @Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
     // Lista todas las reservas con estado 'Alquilado'
     @Query(value = "SELECT * FROM alquileres WHERE estado = 'Alquilado'", nativeQuery = true)
