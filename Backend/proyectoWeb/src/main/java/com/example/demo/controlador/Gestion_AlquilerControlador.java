@@ -31,11 +31,7 @@ import com.example.demo.repositorio.VehiculosRepositorio;
 
 @RestController
 @RequestMapping("/gestionAlquiler")
-<<<<<<< HEAD
 @CrossOrigin(origins = "http://localhost:4200/")
-=======
-@CrossOrigin(origins = "http://localhost:4200")
->>>>>>> juan-david
 public class Gestion_AlquilerControlador {
 	
 	@Autowired

@@ -146,13 +146,7 @@ public class AlquileresControlador {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-	
-	@Autowired
-	private AlquileresRepositorio repositorioAlquiler;
-	
-	@Autowired
-	private VehiculosRepositorio RepoVehiculos;
-	
+		
 	@PostMapping("/guardarReserva")
 	public ResponseEntity<?> guardarReserva(@RequestBody Alquileres reserva) {
 	    try {
@@ -162,7 +156,7 @@ public class AlquileresControlador {
 	        }
 	        
 	        Long idVehi = reserva.getVehiculo().getIdVehiculo();
-	        Vehiculos vehiculoDB = RepoVehiculos.findById(idVehi).orElse(null);
+	        Vehiculos vehiculoDB = repoVehiculos.findById(idVehi).orElse(null);
 
 	        if (vehiculoDB == null) {
 	            return ResponseEntity.badRequest().body("Vehículo no encontrado.");
@@ -173,7 +167,7 @@ public class AlquileresControlador {
 	        reserva.setEstado("Pendiente");
 	        vehiculoDB.setEstado("Alquilado");
 	        repositorioAlquiler.save(reserva);
-	        RepoVehiculos.save(vehiculoDB);
+	        repoVehiculos.save(vehiculoDB);
 	        
 
 	        return ResponseEntity.ok("Reserva guardada exitosamente.");
@@ -216,42 +210,6 @@ public class AlquileresControlador {
 	                             .body("Error al calcular: " + e.getMessage());
 	    }
 	}
-
-	
-	@PostMapping("/resumenSolicitud")
-	public ResponseEntity<?> Resumen(){
-		try {
-			List<Object[]> resuSoli = repositorioAlquiler.soli();
-			return ResponseEntity.ok(resuSoli);
-		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(null);
-		}
-	}
-	@PostMapping("/Cancelar")
-	public ResponseEntity<?> Cancelar(@RequestParam Long id){
-		  Alquileres vehiculo = repositorioAlquiler.findById(id).orElse(null);
-		  Vehiculos hola = RepoVehiculos.findById(id).orElse(null);
-	    if (repositorioAlquiler.existsById(id)) {
-	        try {
-	        	 vehiculo.setEstado("Cancelada");
-	        	 repositorioAlquiler.save(vehiculo);
-	        	 
-	        	 hola.setEstado("Disponible");
-	        	 RepoVehiculos.save(hola);
-	             
-	            
-	            return ResponseEntity.ok("Reserva cancelada y vehículo liberado.");
-
-	        } catch (Exception e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                                 .body("Error interno del servidor al eliminar el aquiler: " + e.getMessage());
-	        }
-	    } else {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                             .body("No se encontró un alquiler con ID " + id + " para eliminar.");
-	    }
-	}
 	
 	@PostMapping("/verificarDisponibilidad")
 	public ResponseEntity<?> verificarDisponibilidad(
@@ -275,46 +233,5 @@ public class AlquileresControlador {
 	                             .body("Error al verificar disponibilidad: " + e.getMessage());
 	    }
 	}
-
-
-	
-	@PostMapping("/cambioDisponibilidad")
-	public ResponseEntity<?> estadoDispo(@RequestParam Long id){
-		
-		Alquileres alquiler = repositorioAlquiler.findById(id).orElse(null);
-		if(repositorioAlquiler.existsById(id)) {
-			try {
-				alquiler.setEstado("Alquilado");
-	            repositorioAlquiler.save(alquiler);
-	            
-	            Long idVehiculo = alquiler.getVehiculo().getIdVehiculo();
-	            RepoVehiculos.estadoDispo("Alquilado", idVehiculo);
-	            return ResponseEntity.ok("Reserva confirmada y vehículo marcado como alquilado.");
-  
-			}catch (Exception en) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error interno del servidor al actualizar el alquiler: " + en.getMessage());
-			}
-		}else {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se encontró un alquiler con ID " + id + " para actualizar.");
-}
-		
-	}
-	
-	
-	
-	@GetMapping("/VehiculoAlquilado")
-	public ResponseEntity<?> ListaVehiAlqui(){
-		try {
-	        List<Object[]> lista = repositorioAlquiler.ListaAlqui();
-	        return ResponseEntity.ok(lista);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(null);
-			
-		}
-	}
-	
 
 }

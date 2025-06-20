@@ -50,12 +50,15 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres, Long> {
                             
 // El sistema consulta la base de datos para identificar todas las reservas de alquiler cuyo estado indica 
 	//que el vehículo está actualmente alquilado o en posesión del cliente.
-	
-	@Query(value = "SELECT v.placa, v.marca, v.modelo, a.id_usuario, a.fecha_inicio, a.fecha_fin, a.estado " +
+/*
+ 	@Query(value = "SELECT v.placa, v.marca, v.modelo, a.id_usuario, a.fecha_inicio, a.fecha_fin, a.estado " +
             "FROM vehiculos v " +
             "INNER JOIN alquileres a ON v.id_vehiculo = a.id_vehiculo " +
             "WHERE a.estado = 'Alquilado'", nativeQuery = true)
-public List<Object[]> ListaAlqui();
+	public List<Object[]> ListaAlqui();
+
+ */	
+
 	
 	
 
@@ -66,10 +69,6 @@ public List<Object[]> ListaAlqui();
     // Calcula el costo total del alquiler según vehículo y fechas
     @Query(value = "SELECT valor_total FROM alquileres v WHERE v.id_vehiculo = :id AND v.fecha_inicio = :FI AND v.fecha_fin = :FF", nativeQuery = true)
     List<BigDecimal> valorTotal(@Param("id") int id_vehiculo, @Param("FI") Date fecha_inicio, @Param("FF") Date fecha_fin);
-
-    // Muestra resumen de solicitud: vehículo, fechas y valor total
-    @Query(value = "SELECT id_vehiculo, fecha_inicio, fecha_fin, valor_total FROM alquileres", nativeQuery = true)
-    List<Object[]> soli();
 
     // Libera un vehículo (marca como disponible)
     @Query(value = "UPDATE vehiculos SET disponible = true WHERE id_vehiculo = :id", nativeQuery = true)
