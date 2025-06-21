@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -8,4 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './nav-usuario.css'
 })
 export class NavUsuarioComponent {
+  @Output() reloandAfterInit = new EventEmitter<void>();
+
+  onReloandAfterinit(){
+    this.reloandAfterInit.emit();
+  }
 }

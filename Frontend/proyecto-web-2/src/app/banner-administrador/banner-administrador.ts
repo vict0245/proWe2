@@ -36,7 +36,6 @@ export class BannerAdministrador implements OnInit {
   info(){
     this.transfer.datos$.subscribe(data => {
       if(data!=null){
-        console.log('Datos recibidos:', data);
         this.Usuario = data || '';
       }else{
       console.warn('no se recibieron datos');
@@ -45,13 +44,13 @@ export class BannerAdministrador implements OnInit {
   }
 
   mostrarDivAlquiler(){
-    console.log("Abriendo div de vehículos alquilados");
     const modal = document.getElementById("modallAlqui");
     if (modal) {
       this.cerrarModalvehiculos();
       modal.style.display = "block";
       // Añade una comprobación de seguridad, aunque en ngAfterViewInit debería estar siempre definido
       if (this.alqui) {
+        this.alqui.verAlquilado();
         this.alqui.verVehiculosAlquilados();
       } else {
         console.error("Error: 'alqui' (AlquileresComponent) no está definido.");
@@ -60,13 +59,13 @@ export class BannerAdministrador implements OnInit {
   }
 
   mostrarDivDisponible(){
-    console.log("Abriendo div de vehículos disponibles");
     const modal = document.getElementById("modallAlqui"); // Asume que es el mismo modal o asegúrate de que tienes otro ID para el modal de disponibles.
     if (modal) {
       this.cerrarModalvehiculos();
       modal.style.display = "block";
       // Añade una comprobación de seguridad
       if (this.alqui) {
+        this.alqui.verAlquiler();
         this.alqui.verVehiculosDisponibles(); // Asegúrate de que AlquileresComponent tenga este método
       } else {
         console.error("Error: 'alqui' (AlquileresComponent) no está definido.");
@@ -89,7 +88,6 @@ export class BannerAdministrador implements OnInit {
   }
 
   mostrarDivVehiculo(){
-    console.log("Abriendo div de vehículos");
     const modal = document.getElementById("modallVehi");
     if (modal) {
       this.cerrarModalAlquilados();

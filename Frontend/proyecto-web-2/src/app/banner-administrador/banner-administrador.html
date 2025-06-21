@@ -7,17 +7,13 @@
     <div class="welcome-container">
         <h1>¡Bienvenido, Administrador!</h1>
         <p>usuario: {{Usuario}}</p>
-        <p>Aquí tienes un resumen de tus actividades recientes:</p>
-        <div class="d-flex justify-content-around">
-            <a href="#" class="btn btn-primary">Ver Actividades</a>
-            <a href="#" class="btn btn-secondary" (click)="cerrarSesion()">cerrar seccion</a>
-        </div>
     </div>
     <div id="modallAlqui" class="welcome-container" style="display: none;">
         <app-alquileres></app-alquileres>
     </div>
     <div id="modallVehi" class="welcome-container" style="display: none;">
-        <app-vehiculo-componente></app-vehiculo-componente>
+        <app-vehiculo-componente
+        (recargarAfterInitRequest)="mostrarDivDisponible()"></app-vehiculo-componente>
     </div>
 </div>
 <router-outlet></router-outlet>

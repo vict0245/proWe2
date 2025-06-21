@@ -79,7 +79,6 @@ export class LoginComponent {
         switch(response) {
           case true:
             alert("Login correcto bienvenido Usuario "+response);
-            console.log("identificacion: ", this.identificacion);
             this.enviar(this.identificacion);
             this.limpiarCampos();
             this.route.navigate(['/bannerUsuario']);
@@ -99,7 +98,6 @@ export class LoginComponent {
     }
 
   loginAdmin(){
-    console.log("identificacion: ", this.usuarioA, " password: ", this.password);
     this.loginServicio.loginAdmin(this.usuarioA,this.password,true).subscribe({
       next: (response) => {
         switch(response) {
@@ -171,7 +169,6 @@ export class LoginComponent {
   }
 
   registrarAdmin(){
-    console.log("Registro de administrador: ", this.admin);
     this.loginServicio.reguistrarAdministrador(this.admin).subscribe({
       next: (response) => {
         if (response) {

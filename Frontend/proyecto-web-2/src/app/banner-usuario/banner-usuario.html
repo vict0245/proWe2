@@ -1,13 +1,13 @@
-<app-nav-usuario></app-nav-usuario>
+<app-nav-usuario
+(reloandAfterInit)="ngAfterViewInit()"
+></app-nav-usuario>
 <div class="vh-100 gradient-custom">
     <div class="welcome-container ">
         <h1>¡Bienvenido, Usuario!</h1>
         <p>identificacion: {{identificacion}}</p>
-        <p>Aquí tienes un resumen de tus actividades recientes:</p>
-        <div class="d-flex justify-content-around">
-            <a href="#" class="btn btn-primary">Ver Actividades</a>
-            <a href="#" class="btn btn-secondary" (click)="cerrarSesion()">cerrar seccion</a>
-        </div>
+    </div>
+    <div class="welcome-container" id="modallAlqui">
+        <app-alquileres></app-alquileres>
     </div>
 </div>
 <router-outlet></router-outlet>

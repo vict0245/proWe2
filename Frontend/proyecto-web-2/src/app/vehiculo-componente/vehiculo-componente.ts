@@ -4,6 +4,7 @@ import { VehiculosServicio } from '../servicio/vehiculos';
 import { FormsModule } from '@angular/forms';
 import { Alquileres } from '../entidades/alquileres';
 import { Gestionalquiler } from '../entidades/gestionalquiler';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -19,6 +20,9 @@ export class VehiculoComponente implements OnInit {
   alquilersIns: Alquileres = new Alquileres();
   gestionIns: Gestionalquiler = new Gestionalquiler();
   vehiculoV: Vehiculos = new Vehiculos();
+
+  
+  @Output() recargarAfterInitRequest = new EventEmitter<void>();
 
   constructor(private servicio: VehiculosServicio) {}
 
@@ -40,10 +44,10 @@ export class VehiculoComponente implements OnInit {
 
   guardarVehiculo() {
     this.servicio.registrarVehiculo(this.vehiculoV).subscribe(dato => {
-      console.log(dato);
       if (dato != null) {
         alert("Vehiculo Registrado");
         this.cerrarRegistro();
+        this.onrecargarAfterInitRequest();
         this.ngOnInit(); 
       } else {
         alert("Registro no guardado");
@@ -98,4 +102,8 @@ guardarGestion(){
       }
     })
 }
+
+onrecargarAfterInitRequest(){
+    this.recargarAfterInitRequest.emit();
+  }
 }

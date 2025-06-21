@@ -20,17 +20,14 @@ export class NavAdminComponent implements OnInit {
   }
 
   onAbrirModalAlquiladosClick(){
-    console.log("NavAdmin: Solicitando abrir modal de vehículos alquilados.");
     this.abrirModalAlquiladosRequest.emit();
   }
 
   onAbrirModalDisponiblesClick(){
-    console.log("NavAdmin: Solicitando abrir modal de vehículos disponibles.");
     this.abrirModalDisponiblesRequest.emit();
   }
 
   onAbrirDivVehiculo(){
-    console.log('NavAdmin: Solicitando abrir el div de vehículos.');
     this.AbrirDivVehiculoRequest.emit();
   }
 }
