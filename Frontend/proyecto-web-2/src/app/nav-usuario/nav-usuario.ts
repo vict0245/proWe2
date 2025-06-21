@@ -1,4 +1,6 @@
+import { VehiculosServicio } from './../servicio/vehiculos';
 import { Component, EventEmitter, Output } from '@angular/core';
+import { ComunicacionService } from '../comunicacion';
 
 @Component({
   standalone: true,
@@ -8,9 +10,28 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './nav-usuario.css'
 })
 export class NavUsuarioComponent {
+  constructor(private comunicacion: ComunicacionService) {}
   @Output() reloandAfterInit = new EventEmitter<void>();
 
-  onReloandAfterinit(){
+
+
+    Vehiculos: VehiculosServicio;
+
+     onReloandAfterinit(){
     this.reloandAfterInit.emit();
   }
+   
+
+  filtrar(tipo: string) {
+    this.comunicacion.emitirTipo(tipo);
+  }
+
+  mostrar(){
+    this.comunicacion.mostrarTodo();
+  }
 }
+
+ 
+
+  
+

@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AlquileresServicio } from '../servicio/alquileres';
 import { FormsModule } from '@angular/forms';
+import { VehiculosServicio } from '../servicio/vehiculos';
+import { ComunicacionService } from '../comunicacion';
+
 
 @Component({
   standalone: true,
@@ -18,13 +21,24 @@ export class AlquileresComponent implements OnInit {
   alquileres: any = {} ;
   alquiler: any[]=[];
   vehiculos: any[] = [];
+  vehiculosF: any[]=[];
 
     ngOnInit(): void {
+      this.comunicacion.tipoFiltro$.subscribe((tipo) => {
+      this.tipo(tipo);
+    });
+
+        this.comunicacion.Mostrar$.subscribe(() => {
+        this.verAlquiler();
+      
+    });
+  
     this.verAlquiler();
     this.verAlquilado();
+    
       
   }
-    constructor(private alquilerservicio: AlquileresServicio){
+    constructor(private alquilerservicio: AlquileresServicio,private vehiculosServicio: VehiculosServicio,  private comunicacion: ComunicacionService,){
 
   }
   verAlquiler(){
@@ -35,6 +49,7 @@ export class AlquileresComponent implements OnInit {
     tipo: item[2],
     valorAlquilerDia: item[3]
     }));
+     this.vehiculosF = this.vehiculos;
   });
 
 }
@@ -66,7 +81,6 @@ cerrar() {
   const modal = document.getElementById("actualizar");
   if (modal) modal.style.display = 'none';
 
-  // Limpia estado visual
   this.valorCalculado = '';
   this.respuestaDisponibilidad = '';
   this.disponible = null;
@@ -171,5 +185,15 @@ confirmarReserva() {
       console.error("Modal no encontrado");
     }
   }
+
+
+
+   tipo(tipo: string) {
+  console.log("Tipo seleccionado:", tipo); 
+  this.vehiculosServicio.tipoVehiculo(tipo).subscribe(dato => {
+    console.log("Respuesta del backend:", dato);
+    this.vehiculosF = dato;
+  });
+}
 
 }

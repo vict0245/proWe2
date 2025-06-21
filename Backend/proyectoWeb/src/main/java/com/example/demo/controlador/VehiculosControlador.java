@@ -85,4 +85,14 @@ public class VehiculosControlador {
                 .map(vehiculo -> ResponseEntity.ok(vehiculo))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
+
+
+	@GetMapping("/tipoVehiculo")
+	public ResponseEntity<List<Vehiculos>> tipoV(@RequestParam String tipo){
+		List<Vehiculos> vehiculo = vehiculosRepositorio.tipo(tipo);
+		return ResponseEntity.ok(vehiculo);
+	
+	}
+	
+	
 }

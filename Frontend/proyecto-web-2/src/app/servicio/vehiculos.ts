@@ -33,5 +33,11 @@ export class VehiculosServicio {
     };
     return this.httpClient.put(`${this.bdURL3}`,null,{params});
    }
+
+   private bdURL4 ="http://localhost:8080/Vehiculos/tipoVehiculo"
+tipoVehiculo(tipo: string): Observable<any> {
+  return this.httpClient.get(`http://localhost:8080/Vehiculos/tipoVehiculo?tipo=${tipo}`);
+}
+
 }
 
