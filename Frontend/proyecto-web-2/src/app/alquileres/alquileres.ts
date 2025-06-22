@@ -4,6 +4,7 @@ import { AlquileresServicio } from '../servicio/alquileres';
 import { FormsModule } from '@angular/forms';
 import { VehiculosServicio } from '../servicio/vehiculos';
 import { ComunicacionService } from '../comunicacion';
+import { Alquileres } from '../entidades/alquileres';
 
 
 @Component({
@@ -23,15 +24,19 @@ export class AlquileresComponent implements OnInit {
   vehiculos: any[] = [];
   vehiculosF: any[]=[];
 
+
     ngOnInit(): void {
       this.comunicacion.tipoFiltro$.subscribe((tipo) => {
       this.tipo(tipo);
     });
 
-        this.comunicacion.Mostrar$.subscribe(() => {
-        this.verAlquiler();
-      
+      this.comunicacion.Mostrar$.subscribe(() => {
+      this.verAlquiler();
     });
+
+      this.comunicacion.mostrarA$.subscribe(() =>{
+        this.verAlquilado();
+      });
   
     this.verAlquiler();
     this.verAlquilado();
@@ -56,15 +61,17 @@ export class AlquileresComponent implements OnInit {
 
 verAlquilado(){
   this.alquilerservicio.obtenerListaAlquilados().subscribe(dato => {
-    this.alquiler = dato.map((item: any[]) => ({
-      placa: item[0],
-      marca: item[1],
-      modelo: item[2],
-      id_cliente: item[3],
-      fecha_inicio: item[4],
-      fecha_fin: item[5],
-      estado: item[6]
-    }));
+this.alquiler = dato.map((item: any[]) => ({
+  idAlquiler: item[0],
+  placa: item[1],
+  marca: item[2],
+  modelo: item[3],
+  id_cliente: item[4],
+  fecha_inicio: item[5],
+  fecha_fin: item[6],
+  estado: item[7]
+}));
+
   });
 }
 
@@ -194,6 +201,20 @@ confirmarReserva() {
     console.log("Respuesta del backend:", dato);
     this.vehiculosF = dato;
   });
+}
+cancelar(id: number) {
+  console.log("ID recibido para cancelar:", id);
+  this.alquilerservicio.cancelarAlquiler(id).subscribe(
+    res => {
+      console.log("✅ Éxito:", res.mensaje);
+      alert(res.mensaje);
+      this.verAlquilado(); // Recargar la lista si aplica
+    },
+    err => {
+      console.error("❌ Error al cancelar:", err.error?.error || err.message);
+      alert(err.error?.error || "Error al cancelar");
+    }
+  );
 }
 
 }

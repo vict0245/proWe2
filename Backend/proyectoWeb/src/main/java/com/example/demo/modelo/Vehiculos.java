@@ -3,6 +3,8 @@ package com.example.demo.modelo;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +28,7 @@ public class Vehiculos {
     private String estado;
     private BigDecimal valorAlquilerDia;
     private String tipo;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "vehiculo")
     private List<Alquileres> alquileres;
 

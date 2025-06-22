@@ -56,8 +56,8 @@ public class Gestion_AlquilerControlador {
 
 	    Alquileres alquiler = alquilerRevision.get();
 
-	    alquiler.setEstado("ENTREGADO");
-	    alquiler.getVehiculo().setEstado("ENTREGADO");
+	    alquiler.setEstado("Alquilado");
+	    alquiler.getVehiculo().setEstado("Alquilado");
 
 	    repositorioAlquiler.save(alquiler);
 	    repositorioV.save(alquiler.getVehiculo());
@@ -100,18 +100,18 @@ public class Gestion_AlquilerControlador {
 	    BigDecimal nuevoTotal = alquiler.getValorTotal().add(valorAdicional);
 
 	    alquiler.setFechaEntregaReal(fechaActual);
-	    alquiler.setEstado("FINALIZADO");
+	    alquiler.setEstado("Finalizado");
 	    alquiler.setValorAdicional(valorAdicional);
 	    alquiler.setValorTotal(nuevoTotal);
 
 	    repositorioAlquiler.save(alquiler);
 
 	    Vehiculos vehiculo = alquiler.getVehiculo();
-	    vehiculo.setEstado("DISPONIBLE");
+	    vehiculo.setEstado("Disponible");
 	    repositorioV.save(vehiculo);
 
 	    Gestion_Alquiler gestion = new Gestion_Alquiler();
-	    gestion.setAccion("DEVUELTO");
+	    gestion.setAccion("Devuelto");
 	    gestion.setFechaAccion(fechaActual);
 	    gestion.setAlquiler(alquiler);
 

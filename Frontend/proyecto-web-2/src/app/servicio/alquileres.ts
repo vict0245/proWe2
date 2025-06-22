@@ -40,6 +40,13 @@ obtenerListaAlquilados(): Observable<any>{
   return this.httpClient.get<any>(this.bdURLC)
 }
 
+private bdURLD = "http://localhost:8080/alquiler/Cancelar"
+// Angular servicio
+cancelarAlquiler(id: number): Observable<any> {
+  return this.httpClient.post(`${this.bdURLD}?id=${id}`, {});
+}
+
+
 
 
 

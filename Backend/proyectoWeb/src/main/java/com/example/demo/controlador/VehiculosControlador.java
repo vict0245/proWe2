@@ -89,6 +89,7 @@ public class VehiculosControlador {
 
 	@GetMapping("/tipoVehiculo")
 	public ResponseEntity<List<Vehiculos>> tipoV(@RequestParam String tipo){
+		 System.out.println("Tipo recibido en backend: " + tipo);
 		List<Vehiculos> vehiculo = vehiculosRepositorio.tipo(tipo);
 		return ResponseEntity.ok(vehiculo);
 	
