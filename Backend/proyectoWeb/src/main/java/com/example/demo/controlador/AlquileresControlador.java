@@ -31,15 +31,8 @@ public class AlquileresControlador {
     private VehiculosRepositorio repoVehiculos;
 
     // Mostrar detalles de vehículos disponibles
-    @PostMapping("/detallesVehiculo")
-    public ResponseEntity<?> detalle(@RequestBody String estado) {
-        try {
-            List<Object[]> vehiculos = repositorioAlquiler.mostrarVehi(estado);
-            return ResponseEntity.ok(vehiculos);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
+
+
 
     // Calcular valor total del alquiler
     @PostMapping("/valorTotalAlquiler")
@@ -126,16 +119,19 @@ public class AlquileresControlador {
     // Verificar disponibilidad de un vehículo entre fechas
     @PostMapping("/verificarDisponibilidadVehiculo")
     public Object verificarDisponibilidadd(@RequestBody credenciales c) {
-    	Long idVehiculo = c.getId();
+        Long idVehiculo = c.getId();
         LocalDate fechaInicio = c.getFechaInicio();
         LocalDate fechaFin = c.getFechaFin();
-            Alquileres reservas = repositorioAlquiler.verificarDisponibilidad(idVehiculo, fechaInicio, fechaFin);
-            if (reservas!=null) {
-                return ResponseEntity.ok(false);                
-            } else {
-                return ResponseEntity.ok(true);
-            }
+
+        List<Alquileres> reservas = repositorioAlquiler.verificarDisponibilidad2(idVehiculo, fechaInicio, fechaFin);
+
+        if (reservas != null && !reservas.isEmpty()) {
+            return ResponseEntity.ok(false);
+        } else {
+            return ResponseEntity.ok(true);
+        }
     }
+
 
     // Confirmar estado de alquiler y marcar vehículo como "Alquilado"
     @PostMapping("/cambioDisponibilidad")

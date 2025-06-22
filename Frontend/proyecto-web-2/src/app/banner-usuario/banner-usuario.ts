@@ -18,7 +18,7 @@ export class BannerUsuarioComponent {
   constructor(private router: Router, private transfer:TransDatosService) {}
   
   @ViewChild(AlquileresComponent) alqui!: AlquileresComponent;
-    @ViewChild(VehiculoComponente) vehi!: VehiculoComponente;
+  @ViewChild(VehiculoComponente) vehi!: VehiculoComponente;
 
   ngOnInit(): void {
     this.info();
@@ -58,8 +58,8 @@ export class BannerUsuarioComponent {
       modal.style.display = "block";
       // Añade una comprobación de seguridad, aunque en ngAfterViewInit debería estar siempre definido
       if (this.alqui) {
-        this.alqui.verAlquilado();
         this.alqui.verVehiculosAlquilados();
+        this.alqui.verAlquilado();
       } else {
         console.error("Error: 'alqui' (AlquileresComponent) no está definido.");
       }

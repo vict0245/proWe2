@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { VehiculosServicio } from '../servicio/vehiculos';
 import { ComunicacionService } from '../comunicacion';
 import { Alquileres } from '../entidades/alquileres';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -49,7 +50,7 @@ export class AlquileresComponent implements OnInit {
   verAlquiler(){
   this.alquilerservicio.ObtenerListaVehiculos().subscribe((dato: any[]) => {
     this.vehiculos = dato.map(item => ({
-    id: item[0],                    
+    idVehiculo: item[0],                    
     modelo: item[1],
     tipo: item[2],
     valorAlquilerDia: item[3]
@@ -77,11 +78,11 @@ this.alquiler = dato.map((item: any[]) => ({
 
 
 abrir(item: any) {
-  this.vehiculoSeleccionado = item;
-  const modal = document.getElementById("actualizar");
-  if (modal!=null) modal.style.display = 'block';
+  this.vehiculoSeleccionado = item; 
+  document.getElementById('actualizar')!.style.display = 'block';
+  this.valorCalculado = '';
+  this.mostrarResumen = false;
 }
-
 
 
 cerrar() {
@@ -97,7 +98,7 @@ cerrar() {
 
 
 verificar() {
-  const v = this.vehiculoSeleccionado.id;
+  const v = this.vehiculoSeleccionado.idVehiculo;
   const inicio = this.alquileres.fechaInicio;
   const fin = this.alquileres.fechaFin;
   this.valorCalculado = '';
@@ -121,7 +122,7 @@ mostrarResumen: boolean = false;
 calcularTotal() {
   const inicio = this.alquileres.fechaInicio;
   const fin = this.alquileres.fechaFin;
-  const id = this.vehiculoSeleccionado.id;
+  const id = this.vehiculoSeleccionado.idVehiculo;
 
   if (!inicio || !fin || !id) {
     this.valorCalculado = "Debes seleccionar el vehículo y las fechas.";
@@ -140,11 +141,13 @@ calcularTotal() {
       this.mostrarResumen = false;
     }
   });
+
 }
+
 confirmarReserva() {
   const inicio = this.alquileres.fechaInicio;
   const fin = this.alquileres.fechaFin;
-  const vehiculoId = this.vehiculoSeleccionado?.id;
+  const vehiculoId = this.vehiculoSeleccionado?.idVehiculo; 
 
   if (!inicio || !fin || !vehiculoId) {
     alert("Debes completar todos los datos.");
@@ -156,13 +159,13 @@ confirmarReserva() {
     fechaFin: fin,
     estado: "Pendiente",
     vehiculo: { idVehiculo: vehiculoId },
-    usuario: { idUsuario: 1 } // ⚠️ ID simulado. En un sistema real, debe ser el usuario logueado
+    usuario: { idUsuario: 1 } // ⚠️ Simulado, reemplazar por el ID del usuario logueado
   };
 
   this.alquilerservicio.guardarReserva(reserva).subscribe({
     next: (res) => {
       alert("✅ " + res);
-      this.cerrar(); // Opcional: Cierra modal
+      this.cerrar();
     },
     error: (err) => {
       console.error("❌ Error al guardar reserva:", err);
@@ -170,6 +173,7 @@ confirmarReserva() {
     }
   });
 }
+
 
   verVehiculosAlquilados() {
     const divAlquilados = document.getElementById("VehículosAlquilados");
@@ -203,18 +207,33 @@ confirmarReserva() {
   });
 }
 cancelar(id: number) {
-  console.log("ID recibido para cancelar:", id);
-  this.alquilerservicio.cancelarAlquiler(id).subscribe(
-    res => {
-      console.log("✅ Éxito:", res.mensaje);
-      alert(res.mensaje);
-      this.verAlquilado(); // Recargar la lista si aplica
-    },
-    err => {
-      console.error("❌ Error al cancelar:", err.error?.error || err.message);
-      alert(err.error?.error || "Error al cancelar");
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: `¿Deseas cancelar el alquiler con ID ${id}?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, cancelar',
+    cancelButtonText: 'No'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      console.log("✅ ID recibido para cancelar:", id);
+
+      this.alquilerservicio.cancelarAlquiler(id).subscribe(
+        res => {
+          // ✅ Como el backend devuelve solo un string, usamos res directamente
+          Swal.fire('Cancelado', res, 'success');
+          this.verAlquilado(); // 🔄 Refresca la tabla
+        },
+        err => {
+          console.error("❌ Error al cancelar:", err.error || err.message);
+          Swal.fire('Error', err.error || 'Error al cancelar', 'error');
+        }
+      );
+    } else {
+      console.log("❎ Cancelación abortada por el usuario.");
     }
-  );
+  });
 }
+
 
 }
