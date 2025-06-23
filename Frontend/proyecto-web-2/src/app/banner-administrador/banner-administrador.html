@@ -1,7 +1,8 @@
 <app-nav-admin 
     (abrirModalAlquiladosRequest)="mostrarDivAlquiler()"
     (abrirModalDisponiblesRequest)="mostrarDivDisponible()"
-    (AbrirDivVehiculoRequest)="mostrarDivVehiculo()">
+    (AbrirDivVehiculoRequest)="mostrarDivVehiculo()"
+    (abrirModalPendientesRequest)="mostrarDivPendientes()">
 </app-nav-admin>
 <div class="vh-100 gradient-custom">
     <div class="welcome-container">
@@ -15,5 +16,11 @@
         <app-vehiculo-componente
         (recargarAfterInitRequest)="mostrarDivDisponible()"></app-vehiculo-componente>
     </div>
+    <div id="modallPendientes" class="welcome-container" style="display: none;">
+        <app-alquileres
+        (recargarAfterInitRequest)="mostrarDivPendientes()"></app-alquileres>
+    </div>
+    
+
 </div>
 <router-outlet></router-outlet>

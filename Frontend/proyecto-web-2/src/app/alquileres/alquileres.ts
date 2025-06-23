@@ -24,6 +24,9 @@ export class AlquileresComponent implements OnInit {
   alquiler: any[]=[];
   vehiculos: any[] = [];
   vehiculosF: any[]=[];
+mostrarDisponibles: boolean = false;
+mostrarAlquilados: boolean = false;
+
 
 
     ngOnInit(): void {
@@ -39,8 +42,7 @@ export class AlquileresComponent implements OnInit {
         this.verAlquilado();
       });
   
-    this.verAlquiler();
-    this.verAlquilado();
+
     
       
   }
@@ -55,6 +57,8 @@ export class AlquileresComponent implements OnInit {
     tipo: item[2],
     valorAlquilerDia: item[3]
     }));
+      this.mostrarDisponibles = true;
+       this.mostrarAlquilados = false;
      this.vehiculosF = this.vehiculos;
   });
 
@@ -72,7 +76,8 @@ this.alquiler = dato.map((item: any[]) => ({
   fecha_fin: item[6],
   estado: item[7]
 }));
-
+  this.mostrarDisponibles = false;
+  this.mostrarAlquilados = true;
   });
 }
 
@@ -235,5 +240,22 @@ cancelar(id: number) {
   });
 }
 
+  verListaP(){
+this.alquilerservicio.obtenerListaPendientes().subscribe(dato => {
+this.alquiler = dato.map((item: any[]) => ({
+  idAlquiler: item[0],
+  placa: item[1],
+  marca: item[2],
+  modelo: item[3],
+  id_cliente: item[4],
+  fecha_inicio: item[5],
+  fecha_fin: item[6],
+  estado: item[7]
+}));
+
+  this.mostrarDisponibles = false;
+  this.mostrarAlquilados = true;
+  });
+  }
 
 }

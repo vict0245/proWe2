@@ -250,23 +250,16 @@ public class AlquileresControlador {
 	    }
 	}
 	
-	@PostMapping("/verificarDisponibilidad1")
-	public ResponseEntity<?> verificarDisponibilidad(@RequestBody credenciales c) {
-		LocalDate fechaInicio = c.getFechaInicio();
-		LocalDate fechaFin = c.getFechaFin();
-	    try {
-	        List<Alquileres> reservas = repositorioAlquiler.verificarDisponibilidad(fechaInicio, fechaFin);
-
-	        if (reservas.isEmpty()) {
-	            return ResponseEntity.ok("Disponible");
-	        } else {
-	            return ResponseEntity.ok("No disponible. Ya hay una reserva para esas fechas.");
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace(); // MOSTRAR ERROR EN CONSOLA
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                             .body("Error al verificar disponibilidad: " + e.getMessage());
-	    }
+	@GetMapping("/vehiculosPendientes")
+	public ResponseEntity<?> vehiculos(){
+		try {
+	        List<Object[]> vehiculos = repositorioAlquiler.ListaPendientes();
+	        return ResponseEntity.ok(vehiculos);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(null);
+			
+		}
 	}
 
 }

@@ -6,6 +6,7 @@ import { AlquileresComponent } from "../alquileres/alquileres";
 import { OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { VehiculoComponente } from '../vehiculo-componente/vehiculo-componente';
+import { AlquileresServicio } from '../servicio/alquileres';
 
 @Component({
   standalone: true,
@@ -16,14 +17,21 @@ import { VehiculoComponente } from '../vehiculo-componente/vehiculo-componente';
 })
 export class BannerAdministrador implements OnInit {
   Usuario: string = '';
-  constructor(private router:Router, private transfer:TransDatosService) {}
+  vehiculosPendientes: any[] = [];
+  constructor(private alquilerservicio: AlquileresServicio, private router:Router, private transfer:TransDatosService) {}
 
   @ViewChild(AlquileresComponent) alqui!: AlquileresComponent;
   @ViewChild(VehiculoComponente) vehi!: VehiculoComponente;
 
     ngOnInit(): void {
     this.info();
+
   }
+  abrirModalAlquiladosYListar() {
+  this.mostrarDivAlquiler();
+
+}
+
 
   ngAfterViewInit() {
     this.mostrarDivAlquiler();
@@ -94,5 +102,28 @@ export class BannerAdministrador implements OnInit {
       modal.style.display = "block";
     }
   }
+
+    mostrarDivPendientes(){
+    const modal = document.getElementById("modallPendientes");
+    if (modal) {
+      this.cerrarModalPendientes();
+      modal.style.display = "block";
+      // Añade una comprobación de seguridad, aunque en ngAfterViewInit debería estar siempre definido
+      if (this.alqui) {
+        this.alqui.verListaP();
+      } else {
+        console.error("Error: 'alqui' (AlquileresComponent) no está definido.");
+      }
+    }
+  }
+
+  cerrarModalPendientes() {
+    const modal = document.getElementById("modallPendientes");
+    if (modal) {
+      modal.style.display = "none";
+    }
+  }
+
+
 
 }

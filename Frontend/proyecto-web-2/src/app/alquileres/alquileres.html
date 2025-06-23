@@ -1,4 +1,4 @@
-<div id="VehículosDisponibles" display="none">
+<div *ngIf="mostrarDisponibles" id="VehículosDisponibles" display="none">
   <p class="h4">Vehículos Disponibles</p>
 
   <table class="table table-bordered mt-3">
@@ -131,7 +131,7 @@
   </div>
 </div>
 
-<div id="VehículosAlquilados" display="none">
+<div *ngIf="mostrarAlquilados" id="VehículosAlquilados" display="none">
   <p class="h4">Vehículos Alquilados</p>
 
   <table class="table table-bordered mt-3">

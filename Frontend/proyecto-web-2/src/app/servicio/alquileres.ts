@@ -46,6 +46,11 @@ cancelarAlquiler(id: number): Observable<any> {
   return this.httpClient.post(`${this.bdURLD}?id=${id}`, {});
 }
 
+private bdURLF = "http://localhost:8080/alquiler/vehiculosPendientes"
+obtenerListaPendientes(): Observable<any>{
+  return this.httpClient.get(`${this.bdURLF}`);
+}
+
 
 
 

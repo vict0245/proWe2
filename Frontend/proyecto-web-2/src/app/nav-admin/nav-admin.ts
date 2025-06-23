@@ -13,7 +13,7 @@ export class NavAdminComponent implements OnInit {
   @Output() abrirModalAlquiladosRequest = new EventEmitter<void>();
   @Output() abrirModalDisponiblesRequest = new EventEmitter<void>();
   @Output() AbrirDivVehiculoRequest = new EventEmitter<void>();
-  
+  @Output() abrirModalPendientesRequest = new EventEmitter<void>();
 
   constructor(private router:Router) { }
   ngOnInit(): void {
@@ -29,5 +29,8 @@ export class NavAdminComponent implements OnInit {
 
   onAbrirDivVehiculo(){
     this.AbrirDivVehiculoRequest.emit();
+  }
+  onAbrirModalPendientesClick(){
+    this.abrirModalPendientesRequest.emit();
   }
 }

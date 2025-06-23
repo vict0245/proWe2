@@ -80,4 +80,11 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres, Long> {
     // Lista todas las reservas con estado 'Alquilado'
     @Query(value = "SELECT * FROM alquileres WHERE estado = 'Alquilado'", nativeQuery = true)
     List<Object> ListaAlqui();
+    
+    @Query(value = "SELECT a.id_alquiler, v.placa, v.marca, v.modelo, a.id_usuario, a.fecha_inicio, a.fecha_fin, a.estado " +
+            "FROM vehiculos v " +
+            "INNER JOIN alquileres a ON v.id_vehiculo = a.id_vehiculo " +
+            "WHERE a.estado = 'Pendiente'", nativeQuery = true)
+List<Object[]> ListaPendientes();
+
 }
