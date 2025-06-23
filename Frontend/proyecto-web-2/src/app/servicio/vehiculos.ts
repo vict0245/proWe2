@@ -9,29 +9,33 @@ import { Observable } from 'rxjs';
 export class VehiculosServicio {
   dato: boolean;
 
-  constructor(private httpClient: HttpClient) {
-
-   }
-   private bdURL1 = "http://localhost:8080/administradores/añadirvehiculo";
-   registrarVehiculo(vehiculos: Vehiculos): Observable<Object>{
+  constructor(private httpClient: HttpClient) {}
+  private bdURL1 = "http://localhost:8080/administradores/añadirvehiculo";
+    registrarVehiculo(vehiculos: Vehiculos): Observable<Object>{
     this.dato=true;
     return this.httpClient.post(`${this.bdURL1}`,vehiculos);
-   }
+  }
 
-   private bdURL2 = "http://localhost:8080/gestionAlquiler/estadoEntregado";
+  private bdURL2 = "http://localhost:8080/gestionAlquiler/estadoEntregado";
    registrarGestion(idAlquiler: number, idAdministrador: number): Observable<object>{
     const params = {
       idAlquiler: idAlquiler.toString(),
     idAdministrador: idAdministrador.toString()
     };
     return this.httpClient.put(`${this.bdURL2}`,null,{params});
-   }
-   private bdURL3 = "http://localhost:8080/gestionAlquiler/estadoDevuelto";
+  }
+  
+  private bdURL3 = "http://localhost:8080/gestionAlquiler/estadoDevuelto";
    registrarGestionDevuelto(idAlquiler: number): Observable<object>{
     const params = {
       idAlquiler: idAlquiler.toString()
     };
     return this.httpClient.put(`${this.bdURL3}`,null,{params});
-   }
+  }
+
+  private bdURL4 ="http://localhost:8080/Vehiculos/tipoVehiculo"
+    tipoVehiculo(tipo: string): Observable<any> {
+    return this.httpClient.get(`http://localhost:8080/Vehiculos/tipoVehiculo?tipo=${tipo}`);
+  }
 }
 

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -67,31 +68,60 @@ public class AlquileresControlador {
 
     // Cancelar una reserva y liberar el vehículo
     @PostMapping("/Cancelar")
-    public ResponseEntity<?> Cancelar(@RequestBody Long id) {
+    public ResponseEntity<?> Cancelar(@RequestParam Long id) {
+
+        System.out.println("🟡 ID recibido para cancelar: " + id);
+
         if (!repositorioAlquiler.existsById(id)) {
+            System.out.println("❌ No se encontró un alquiler con ID: " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se encontró un alquiler con ID " + id + " para eliminar.");
+                    .body(Map.of("error", "No se encontró un alquiler con ID " + id + " para eliminar."));
         }
 
         try {
             Alquileres alquiler = repositorioAlquiler.findById(id).orElse(null);
+
             if (alquiler == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alquiler no encontrado");
+                System.out.println("❌ Alquiler con ID " + id + " es null.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Alquiler no encontrado."));
+            }
+
+            System.out.println("✅ Alquiler encontrado: " + alquiler);
+
+            if (alquiler.getVehiculo() == null) {
+                System.out.println("❌ El alquiler no tiene vehículo asociado.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("error", "El alquiler no tiene vehículo asociado."));
+            }
+
+            Long idVehiculo = alquiler.getVehiculo().getIdVehiculo();
+            System.out.println("🔁 ID del vehículo asociado: " + idVehiculo);
+
+            Vehiculos vehiculo = repoVehiculos.findById(idVehiculo).orElse(null);
+            if (vehiculo == null) {
+                System.out.println("❌ Vehículo no encontrado.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("error", "Vehículo no encontrado con ID: " + idVehiculo));
             }
 
             alquiler.setEstado("Cancelada");
             repositorioAlquiler.save(alquiler);
+            System.out.println("☑ Estado del alquiler actualizado a 'Cancelada'.");
 
-            Long idVehiculo = alquiler.getVehiculo().getIdVehiculo();
-            repositorioAlquiler.liberarVehiculo(idVehiculo);
+            vehiculo.setEstado("Disponible");
+            repoVehiculos.save(vehiculo);
+            System.out.println("☑ Vehículo liberado (estado = 'Disponible').");
 
-            return ResponseEntity.ok("Reserva cancelada y vehículo liberado.");
+            return ResponseEntity.ok(Map.of("mensaje", "Reserva cancelada y vehículo liberado."));
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error interno del servidor al cancelar el alquiler: " + e.getMessage());
+                    .body(Map.of("error", "Error interno del servidor al cancelar el alquiler: " + e.getMessage()));
         }
     }
+
 
     // Verificar disponibilidad de un vehículo entre fechas
     @PostMapping("/verificarDisponibilidadVehiculo")

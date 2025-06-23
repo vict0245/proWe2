@@ -51,15 +51,12 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres, Long> {
                             
 // El sistema consulta la base de datos para identificar todas las reservas de alquiler cuyo estado indica 
 	//que el vehículo está actualmente alquilado o en posesión del cliente.
- 	@Query(value = "SELECT v.placa, v.marca, v.modelo, a.id_usuario, a.fecha_inicio, a.fecha_fin, a.estado " +
+ 	@Query(value = "SELECT a.id_alquiler,v.placa, v.marca, v.modelo, a.id_usuario, a.fecha_inicio, a.fecha_fin, a.estado " +
             "FROM vehiculos v " +
             "INNER JOIN alquileres a ON v.id_vehiculo = a.id_vehiculo " +
-            "WHERE v.estado = 'Alquilado'", nativeQuery = true)
+            "WHERE a.estado = 'Alquilado'", nativeQuery = true)
 	public List<Object[]> ListaAlquii();
 
-
-	
-	
 
     // Catálogo de vehículos disponibles: modelo, tipo, precio por día
     @Query(value = "SELECT modelo, tipo, valor_alquiler_dia FROM vehiculos WHERE estado = :estado", nativeQuery = true)

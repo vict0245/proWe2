@@ -34,6 +34,11 @@ public interface VehiculosRepositorio extends JpaRepository<Vehiculos, Long> {
     boolean existsByPlaca(String placa);
 
     // Obtener vehículos disponibles
-    @Query(value = "SELECT * FROM vehiculos WHERE estado = 'DISPONIBLE'", nativeQuery = true)
+    @Query(value = "SELECT * FROM vehiculos WHERE estado = 'Disponible'", nativeQuery = true)
     List<Vehiculos> VehiculosDisponibles();
+    
+    @Query(value = "SELECT * FROM vehiculos WHERE tipo = :tipoo AND estado = 'Disponible'", nativeQuery = true)
+    List<Vehiculos> tipo(@Param("tipoo") String tipo);
+
+    
 }
