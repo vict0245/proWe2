@@ -20,6 +20,7 @@ export class VehiculoComponente implements OnInit {
   alquilersIns: Alquileres = new Alquileres();
   gestionIns: Gestionalquiler = new Gestionalquiler();
   vehiculoV: Vehiculos = new Vehiculos();
+  placaVehiculo: string = '';
 
   
   @Output() recargarAfterInitRequest = new EventEmitter<void>();
@@ -57,17 +58,23 @@ export class VehiculoComponente implements OnInit {
 gestionentrega(){
 
 }
-guardargestiondevolucion(){
-  this.servicio.registrarGestionDevuelto(this.idAlquiler).subscribe(dato => {
-    if(dato!= null){
-      alert("vehiculo devuelto correctamente");
+guardargestiondevolucion() {
+  if (!this.placaVehiculo) {
+    alert('Por favor ingrese la placa del vehículo');
+    return;
+  }
+
+  this.servicio.registrarGestionDevuelto(this.placaVehiculo.toString()).subscribe({
+    next: (response: any) => {
+      alert(response.mensaje || 'Vehículo devuelto correctamente');
       this.cerrarRegistro();
       this.ngOnInit();
-    }else{
-      alert("Error al devolver el vehiculo")
+    },
+    error: (error) => {
+      console.error('Error:', error);
+      alert(error.error?.error || 'Error al procesar la devolución');
     }
-  })
-
+  });
 }
 abrirgestionentregado(){
   const modal = document.getElementById("gestionformulario");
@@ -91,16 +98,23 @@ cerrarRegistrogestiondevuelto() {
       modal.style.display = 'none';
   }
 
-guardarGestion(){
-    this.servicio.registrarGestion(this.idAlquiler, this.idAdministrador).subscribe(dato => {
-      if(dato!=null){
-        alert("Vehiculo Entregado Correctamente");
-        this.cerrarRegistro();
-        this.ngOnInit();
-      }else{
-        alert("Error al entregar el vehiculo")
-      }
-    })
+guardarGestion() {
+    if (!this.placaVehiculo) {
+        alert('Por favor ingrese la placa del vehículo');
+        return;
+    }
+
+    this.servicio.registrarGestion(this.placaVehiculo).subscribe({
+        next: (response: any) => {
+            alert(response.mensaje || 'Vehículo entregado correctamente');
+            this.cerrarRegistro();
+            this.ngOnInit();
+        },
+        error: (error) => {
+            console.error('Error:', error);
+            alert(error.error?.error || 'Error al procesar la entrega');
+        }
+    });
 }
 
 onrecargarAfterInitRequest(){

@@ -97,30 +97,29 @@ export class LoginComponent {
       , error: (error) => {console.error("Login failed", error);}})
     }
 
-  loginAdmin(){
-    this.loginServicio.loginAdmin(this.usuarioA,this.password,true).subscribe({
-      next: (response) => {
-        switch(response) {
-          case true:
-            alert("Login correcto bienvenido administrador "+response);
-            this.enviar(this.usuarioA);
-            this.limpiarCampos();
-            this.cerrarLogin();
-            this.route.navigate(['/bannerAdministrador']);
-            break;
-          case false:
-            alert("Login incorrecto compruebe email o contraseña "+response);
-            break;
-          case null:
-            alert("Usuario no encontrado, por favor registrese.");
-            break;
-          default:
-            alert("Error desconocido, por favor intente más tarde.");
-            break;
+  loginAdmin() {
+    this.loginServicio.loginAdmin(this.usuarioA, this.password).subscribe({
+        next: (response: any) => {
+            if (response.success === true) {
+                localStorage.setItem('idAdministrador', response.id);
+                
+                alert("Login correcto bienvenido administrador");
+                this.enviar(this.usuarioA);
+                this.limpiarCampos();
+                this.cerrarLogin();
+                this.route.navigate(['/bannerAdministrador']);
+            } else if (response.success === false) {
+                alert("Login incorrecto compruebe usuario o contraseña");
+            } else {
+                alert("Administrador no encontrado, por favor regístrese.");
+            }
+        },
+        error: (error) => {
+            console.error("Login failed", error);
+            alert("Error en el proceso de login");
         }
-      }
-      , error: (error) => {console.error("Login failed", error);}})
-  }
+    });
+}
 
   limpiarCampos() {
     this.usuarioA = '';

@@ -1,5 +1,6 @@
 package com.example.demo.controlador;
 
+import java.util.HashMap;
 import java.util.List;
 import java.math.BigDecimal;
 import java.util.List;
@@ -108,7 +109,10 @@ public class AdministradoresControlador {
 		Administradores Apass=this.repositorioA.findByUsuario(usuario);
 		if(Apass!=null) {
 			if(encoder.matches(password,Apass.getPassword())) {
-				return true;
+				Map<String, Object> response = new HashMap<>();
+				response.put("success", true);
+				response.put("id", Apass.getIdAdministrador());
+				return ResponseEntity.ok(response);
 			}else {
 				return false;
 			}

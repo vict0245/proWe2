@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -80,4 +81,6 @@ public interface AlquileresRepositorio extends JpaRepository<Alquileres, Long> {
     // Lista todas las reservas con estado 'Alquilado'
     @Query(value = "SELECT * FROM alquileres WHERE estado = 'Alquilado'", nativeQuery = true)
     List<Object> ListaAlqui();
+    
+    Optional<Alquileres> findByVehiculoPlacaAndEstado(String placa, String estado);
 }

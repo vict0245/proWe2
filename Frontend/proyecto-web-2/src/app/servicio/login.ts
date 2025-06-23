@@ -19,9 +19,9 @@ export class LoginServicio {
     return this.httpClient.post(`${this.urlLoginUsa}`,{identificacion,password});
   }
 
-  loginAdmin(usuarioA: string, password: string,t:boolean): Observable<any> {
-    console.log(usuarioA, password, t);
-    return this.httpClient.post(`${this.urlLoginAdmin}`,[usuarioA,password,t]);
+  loginAdmin(usuarioA: string, password: string): Observable<any> {
+    const body= [usuarioA, password];
+    return this.httpClient.post(`${this.urlLoginAdmin}`, body);
   }
 
   reguistrarUsuario(usuario: Usuario): Observable<any> {
