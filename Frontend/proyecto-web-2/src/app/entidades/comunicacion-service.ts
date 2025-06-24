@@ -5,11 +5,16 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class ComunicacionService {
+
   private tipoFiltro = new Subject<string>();
   tipoFiltro$ = this.tipoFiltro.asObservable();
 
   private mostrar = new Subject<void>();
   Mostrar$ = this.mostrar.asObservable();
+
+  private MostrarA = new Subject<void>();
+
+  mostrarA$ = this.MostrarA.asObservable();
 
   emitirTipo(tipo: string) {
     this.tipoFiltro.next(tipo);

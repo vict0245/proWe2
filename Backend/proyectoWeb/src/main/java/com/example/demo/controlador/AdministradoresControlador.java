@@ -1,7 +1,11 @@
 package com.example.demo.controlador;
 
 import java.util.List;
+
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.modelo.Administradores;
 import com.example.demo.modelo.Gestion_Alquiler;
@@ -32,52 +37,51 @@ import com.example.demo.repositorio.AdministradoresRepositorio;
 import com.example.demo.repositorio.AlquileresRepositorio;
 import com.example.demo.repositorio.VehiculosRepositorio;
 
-
 @RestController
 @RequestMapping("/administradores")
 @CrossOrigin(origins = "http://localhost:4200/")
 public class AdministradoresControlador {
-	
+
 	@Autowired
 	private VehiculosRepositorio repositorioV;
-	
+
 	@Autowired
 	private AlquileresRepositorio repositorioAlquiler;
 	@Autowired
 	private AdministradoresRepositorio repositorioA;
-	
+
 	@Autowired
 	private PasswordEncoder encoder;
-	
+
 	@Autowired
 	private VehiculosRepositorio vehRepo;
-	
+
 	// CRUD
 	@GetMapping("/ver")
-	public List<Administradores> ver(){
+	public List<Administradores> ver() {
 		return this.repositorioA.findAll();
 	}
-	
+
 	@PostMapping("/buscarPorId")
 	public Optional<Administradores> buscarPorId(@RequestBody Long id) {
 		return this.repositorioA.findById(id);
 	}
-	
+
 	@PostMapping("/buscarPorUsuario")
-	public Administradores buscarPorNombre(@RequestBody String usuario){
+	public Administradores buscarPorNombre(@RequestBody String usuario) {
 		return this.repositorioA.findByUsuario(usuario);
 	}
-	
+
 	@PostMapping("/buscarPorGestion")
-	public Administradores buscarPorGestion(@RequestBody Gestion_Alquiler gestion){
+	public Administradores buscarPorGestion(@RequestBody Gestion_Alquiler gestion) {
 		return this.repositorioA.findByGestiones(gestion);
 	}
-	
+
 	@PostMapping("/eliminar")
 	public void eliminar(@RequestParam Long id) {
 		this.repositorioA.deleteById(id);
 	}
-	
+
 	@PostMapping("/actualizar")
 	public Administradores actualizar(@RequestBody Administradores a) {
 		Administradores adminT = this.repositorioA.findById(a.getIdAdministrador()).get();
@@ -87,37 +91,36 @@ public class AdministradoresControlador {
 		Administradores actualizado = this.repositorioA.save(adminT);
 		return actualizado;
 	}
-	
+
 	@PostMapping("/guardar")
 	public Object guardarA(@RequestBody Administradores a) {
 		try {
 			String encodepass = encoder.encode(a.getPassword());
 			a.setPassword(encodepass);
-			this.repositorioA.save(a);	
+			this.repositorioA.save(a);
 			return true;
 		} catch (Exception e) {
 			return false;
 		}
 	}
-		
+
 	// TareasTrello
 	@PostMapping("/iniciar")
 	public Object iniciarSecionA(@RequestBody Object[] valores) {
-		String usuario = (String)valores[0];
-		String password = (String)valores[1];
-		Administradores Apass=this.repositorioA.findByUsuario(usuario);
-		if(Apass!=null) {
-			if(encoder.matches(password,Apass.getPassword())) {
+		String usuario = (String) valores[0];
+		String password = (String) valores[1];
+		Administradores Apass = this.repositorioA.findByUsuario(usuario);
+		if (Apass != null) {
+			if (encoder.matches(password, Apass.getPassword())) {
 				return true;
-			}else {
+			} else {
 				return false;
 			}
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
-	
+
 	@PostMapping("/cambiarEstadoVehiclo")
 	public void cambiarEstadoVehiclo(@RequestBody credenciales c) {
 		Long id = c.getId();
@@ -128,17 +131,31 @@ public class AdministradoresControlador {
 	}
 
 	@PostMapping("/añadirvehiculo")
-	public ResponseEntity<?> añadirvehiculo(@RequestBody Vehiculos vehiculos){
+	public ResponseEntity<?> añadirvehiculo(@RequestParam("placa") String placa, @RequestParam("marca") String marca,
+			@RequestParam("modelo") String modelo, @RequestParam("color") String color,
+			@RequestParam("estado") String estado, @RequestParam("valorAlquilerDia") BigDecimal valorAlquilerDia,
+			@RequestParam("tipo") String tipo, @RequestParam("img") MultipartFile img) {
+		System.out.println("si");
 		try {
-			if(repositorioV.existsByPlaca(vehiculos.getPlaca())) {
-	            return ResponseEntity.badRequest().body("La placa ya está registrada");
-	        }
-			Vehiculos nuevovehiculo = this.repositorioV.save(vehiculos);
+			Vehiculos nuevo = new Vehiculos();
+			nuevo.setPlaca(placa);
+			nuevo.setMarca(marca);
+			nuevo.setModelo(modelo);
+			nuevo.setColor(color);
+			nuevo.setEstado(estado);
+			nuevo.setValorAlquilerDia(valorAlquilerDia);
+			nuevo.setTipo(tipo);
+			nuevo.setImg(img.getBytes());
+
+			if (repositorioV.existsByPlaca(nuevo.getPlaca())) {
+				return ResponseEntity.badRequest().body("La placa ya está registrada");
+			}
+
+			Vehiculos nuevovehiculo = this.repositorioV.save(nuevo);
 			return ResponseEntity.status(HttpStatus.CREATED).body(nuevovehiculo);
-		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error al procesar la solicitud");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar la solicitud");
 		}
 	}
-	
+
 }

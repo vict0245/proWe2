@@ -6,6 +6,7 @@ import { AlquileresComponent } from "../alquileres/alquileres";
 import { OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { VehiculoComponente } from '../vehiculo-componente/vehiculo-componente';
+import { ComunicacionService } from '../entidades/comunicacion-service';
 
 @Component({
   standalone: true,
@@ -16,7 +17,7 @@ import { VehiculoComponente } from '../vehiculo-componente/vehiculo-componente';
 })
 export class BannerAdministrador implements OnInit {
   Usuario: string = '';
-  constructor(private router:Router, private transfer:TransDatosService) {}
+  constructor(private router:Router, private transfer:TransDatosService,private comuni:ComunicacionService) {}
 
   @ViewChild(AlquileresComponent) alqui!: AlquileresComponent;
   @ViewChild(VehiculoComponente) vehi!: VehiculoComponente;
@@ -45,9 +46,11 @@ export class BannerAdministrador implements OnInit {
 
   mostrarDivAlquiler(){
     const modal = document.getElementById("modallAlqui");
-    if (modal) {
+    const divAd = document.getElementById('bannerAd');
+    if (modal && divAd) {
       this.cerrarModalvehiculos();
       modal.style.display = "block";
+      divAd.style.display = "block";
       // Añade una comprobación de seguridad, aunque en ngAfterViewInit debería estar siempre definido
       if (this.alqui) {
         this.alqui.verAlquilado();
@@ -59,10 +62,12 @@ export class BannerAdministrador implements OnInit {
   }
 
   mostrarDivDisponible(){
+    const divAd = document.getElementById('bannerAd');
     const modal = document.getElementById("modallAlqui"); // Asume que es el mismo modal o asegúrate de que tienes otro ID para el modal de disponibles.
-    if (modal) {
+    if (modal && divAd) {
       this.cerrarModalvehiculos();
       modal.style.display = "block";
+      divAd.style.display = "none";
       // Añade una comprobación de seguridad
       if (this.alqui) {
         this.alqui.verAlquiler();
@@ -70,6 +75,27 @@ export class BannerAdministrador implements OnInit {
       } else {
         console.error("Error: 'alqui' (AlquileresComponent) no está definido.");
       }
+    }
+  }
+
+  mostrarDivPendientes(){
+    const modal = document.getElementById("modallAlqui");
+    if (modal) {
+      this.cerrarModalvehiculos();
+      modal.style.display = "block";
+      // Añade una comprobación de seguridad, aunque en ngAfterViewInit debería estar siempre definido
+      if (this.alqui) {
+        this.alqui.verListaP();
+      } else {
+        console.error("Error: 'alqui' (AlquileresComponent) no está definido.");
+      }
+    }
+  }
+
+  cerrarModalPendientes() {
+    const modal = document.getElementById("modallPendientes");
+    if (modal) {
+      modal.style.display = "none";
     }
   }
 

@@ -101,8 +101,8 @@ public class Usuarios {
 		return identificacion;
 	}
 
-	public void setIdentificacion(String email) {
-		this.identificacion = email;
+	public void setIdentificacion(String identificacion) {
+		this.identificacion = identificacion;
 	}
 
 	public String getTelefono() {

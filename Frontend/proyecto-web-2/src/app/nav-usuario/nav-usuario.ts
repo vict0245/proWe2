@@ -18,6 +18,7 @@ export class NavUsuarioComponent {
 
 
   @Output() reloandAfterInit = new EventEmitter<void>();
+  @Output() abrirModalAlquilados = new EventEmitter<void>();
 
   onReloandAfterinit(){
     this.reloandAfterInit.emit();
@@ -29,6 +30,10 @@ export class NavUsuarioComponent {
 
   mostrar(){
     this.comunicacion.mostrarTodo();
+  }
+
+  onAbrirModalAlquiladosClick(){
+    this.abrirModalAlquilados.emit();
   }
 
 }

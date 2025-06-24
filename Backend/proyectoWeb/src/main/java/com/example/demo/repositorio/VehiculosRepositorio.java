@@ -37,8 +37,6 @@ public interface VehiculosRepositorio extends JpaRepository<Vehiculos, Long> {
     @Query(value = "SELECT * FROM vehiculos WHERE estado = 'Disponible'", nativeQuery = true)
     List<Vehiculos> VehiculosDisponibles();
     
-    @Query(value = "SELECT * FROM vehiculos WHERE tipo = :tipoo AND estado = 'Disponible'", nativeQuery = true)
-    List<Vehiculos> tipo(@Param("tipoo") String tipo);
-
-    
-}
+    @Query(value= "select * from vehiculos where tipo =:tipo and estado ='Disponible' ",nativeQuery=true)
+    List<Vehiculos> tipo(@Param("tipo")String tipo);
+    }
