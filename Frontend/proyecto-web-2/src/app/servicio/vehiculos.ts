@@ -1,15 +1,18 @@
+import { Usuario } from './../entidades/usuario';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Vehiculos } from '../entidades/vehiculos';
 import { catchError, Observable, throwError } from 'rxjs';
+import { TransDatosService } from '../servicio/trans-datos';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VehiculosServicio {
+  Usuario="";
   dato: boolean;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient,private transfer:TransDatosService) {}
   private bdURL1 = 'http://localhost:8080/administradores/añadirvehiculo';
   registrarVehiculo(vehiculos: FormData): Observable<Object> {
     this.dato = true;
@@ -18,23 +21,30 @@ export class VehiculosServicio {
 
   private bdURL2 = 'http://localhost:8080/gestionAlquiler/estadoEntregado';
   registrarGestion(placa: string): Observable<any> {
-    const idAdministrador = localStorage.getItem('idAdministrador');
+    this.info();
 
-    if (!idAdministrador) {
+    if (!this.Usuario) {
       return throwError(
         () => new Error('No se encontró el ID del administrador')
       );
     }
-
-    const params = { placa };
-    const headers = { idAdministrador: idAdministrador };
-
-    return this.httpClient.put(this.bdURL2, null, { params, headers }).pipe(
+    
+    return this.httpClient.post(this.bdURL2,[ placa,this.Usuario.toString()]).pipe(
       catchError((error) => {
         console.error('Error en la entrega:', error);
         return throwError(() => error);
       })
     );
+  }
+
+  info(){
+    this.transfer.datos$.subscribe(data => {
+      if(data!=null){
+        this.Usuario = data || '';
+      }else{
+      console.warn('no se recibieron datos');
+    }
+  });
   }
 
   private bdURL3 = 'http://localhost:8080/gestionAlquiler/estadoDevuelto';

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,11 +48,12 @@ public class Gestion_AlquilerControlador {
 	@Autowired
 	private Gestion_AlquilerRepositorio repositorioGestion;
 	
-	@PutMapping("/estadoEntregado")
-	public ResponseEntity<?> entregarVehiculo(@RequestParam String placa, @RequestHeader("idAdministrador") Long idAdministrador) {
-	    
+	@PostMapping("/estadoEntregado")
+	public ResponseEntity<?> entregarVehiculo(@RequestBody Object[] si) {
+	    String placa=(String) si[0];
+	    String administrador = (String) si[1];
 	    Optional<Alquileres> alquilerOpt = repositorioAlquiler.findByVehiculoPlacaAndEstado(placa, "Pendiente");
-	    
+
 	    if (alquilerOpt.isEmpty()) {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
 	                .body(Map.of("error", "No hay alquiler para la placa: " + placa));
@@ -68,10 +70,10 @@ public class Gestion_AlquilerControlador {
 	    gestion.setAccion("entregado");
 	    gestion.setFechaAccion(LocalDate.now());
 	    gestion.setAlquiler(alquiler);
-	    gestion.setAdministrador(repositorioA.findById(idAdministrador).orElse(null));
-
+	    gestion.setAdministrador(repositorioA.findByUsuario(administrador));
+	    
 	    repositorioGestion.save(gestion);
-
+	    
 	    return ResponseEntity.ok(Map.of(
 	        "mensaje", "Vehículo entregado correctamente",
 	        "placa", placa,

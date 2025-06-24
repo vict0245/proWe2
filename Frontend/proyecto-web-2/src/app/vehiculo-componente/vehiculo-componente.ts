@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Alquileres } from '../entidades/alquileres';
 import { Gestionalquiler } from '../entidades/gestionalquiler';
 import { Output, EventEmitter } from '@angular/core';
+import { TransDatosService } from '../servicio/trans-datos';
 
 @Component({
   standalone: true,
@@ -25,9 +26,10 @@ export class VehiculoComponente implements OnInit {
 
   @Output() recargarAfterInitRequest = new EventEmitter<void>();
 
-  constructor(private servicio: VehiculosServicio) {}
+  constructor(private servicio: VehiculosServicio, private transfer:TransDatosService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   abrirRegistroVehiculo() {
     const modal = document.getElementById('registro');
@@ -65,11 +67,13 @@ export class VehiculoComponente implements OnInit {
     });
   }
   gestionentrega() {}
+
   guardargestiondevolucion() {
     if (!this.placaVehiculo) {
       alert('Por favor ingrese la placa del vehículo');
       return;
     }
+    console.log(this.placaVehiculo)
 
     this.servicio
       .registrarGestionDevuelto(this.placaVehiculo.toString())
