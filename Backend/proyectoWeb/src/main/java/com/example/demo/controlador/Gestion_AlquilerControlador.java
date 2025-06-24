@@ -90,20 +90,24 @@ public class Gestion_AlquilerControlador {
 	    Alquileres alquiler = alquilerRevision.get();
 
 	    LocalDate fechaActual = LocalDate.now();
+	    LocalDate fechaInicio = alquiler.getFechaInicio();
 	    LocalDate fechaFin = alquiler.getFechaFin();
+
+	    long diasAlquiler = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
+	    if (diasAlquiler <= 0) diasAlquiler = 1; // Por si acaso hay fechas inválidas
+
+	    BigDecimal tarifaDiaria = alquiler.getVehiculo().getValorAlquilerDia(); // Asegúrate de que exista este getter
+	    BigDecimal valorBase = tarifaDiaria.multiply(BigDecimal.valueOf(diasAlquiler));
 
 	    long retrasoDias = 0;
 	    if (fechaActual.isAfter(fechaFin)) {
 	        retrasoDias = ChronoUnit.DAYS.between(fechaFin, fechaActual);
 	    }
-	    
-	    BigDecimal valorAdicional = BigDecimal.valueOf(retrasoDias * 10000); 
-	    BigDecimal valorBase = alquiler.getValorTotal();
-	    if (valorBase == null) {
-	        valorBase = BigDecimal.ZERO;
-	    }
+
+	    BigDecimal valorAdicional = BigDecimal.valueOf(retrasoDias * 10000);
 	    BigDecimal nuevoTotal = valorBase.add(valorAdicional);
 
+	    
 	    alquiler.setFechaEntregaReal(fechaActual);
 	    alquiler.setEstado("FINALIZADO");
 	    alquiler.setValorAdicional(valorAdicional);
