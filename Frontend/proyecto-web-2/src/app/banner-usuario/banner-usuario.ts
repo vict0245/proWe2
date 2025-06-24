@@ -5,11 +5,12 @@ import { TransDatosService } from '../servicio/trans-datos';
 import { AlquileresComponent } from '../alquileres/alquileres';
 import { ViewChild } from '@angular/core';
 import { VehiculoComponente } from '../vehiculo-componente/vehiculo-componente';
+import { NavAdminComponent } from '../nav-admin/nav-admin'; 
 
 @Component({
   standalone: true,
   selector: 'app-banner-usuario',
-  imports: [RouterOutlet,NavUsuarioComponent,AlquileresComponent, VehiculoComponente],
+  imports: [RouterOutlet,NavUsuarioComponent,AlquileresComponent, VehiculoComponente,NavAdminComponent],
   templateUrl: './banner-usuario.html',
   styleUrl: './banner-usuario.css'
 })
@@ -25,7 +26,7 @@ export class BannerUsuarioComponent {
   }
 
   ngAfterViewInit() {
-    this.mostrarDivAlquiler();
+    this.mostrarDivDisponible();
   }
 
   info(){
@@ -38,23 +39,10 @@ export class BannerUsuarioComponent {
   });
   }
 
-  mostrarDivAlquiler(){
-    const modal = document.getElementById("modallAlqui");
-    if (modal) {
-      modal.style.display = "block";
-      // Añade una comprobación de seguridad, aunque en ngAfterViewInit debería estar siempre definido
-      if (this.alqui) {
-        this.alqui.verVehiculosDisponibles();
-      } else {
-        console.error("Error: 'alqui' (AlquileresComponent) no está definido.");
-      }
-    }
-  }
-
     mostrarDivAlquilers(){
-    const modal = document.getElementById("modallAlqui");
+    const modal = document.getElementById("modallAlquiler");
     if (modal) {
-      this.cerrarModalvehiculos();
+      this.cerrarModalDisponibles();
       modal.style.display = "block";
       // Añade una comprobación de seguridad, aunque en ngAfterViewInit debería estar siempre definido
       if (this.alqui) {
@@ -66,12 +54,32 @@ export class BannerUsuarioComponent {
     }
   }
 
-    cerrarModalvehiculos() {
-    const modal = document.getElementById("modallVehi");
+    cerrarModalDisponibles() {
+    const modal = document.getElementById("modallVehiculo");
     if (modal) {
       modal.style.display = "none";
     }
   }
 
+    mostrarDivDisponible(){
+    const modal = document.getElementById("modallVehiculo"); // Asume que es el mismo modal o asegúrate de que tienes otro ID para el modal de disponibles.
+    if (modal) {
+      this.cerrarModalDisponibles();
+      modal.style.display = "block";
+      // Añade una comprobación de seguridad
+      if (this.alqui) {
+        this.alqui.verAlquiler();
+        this.alqui.verVehiculosDisponibles(); // Asegúrate de que AlquileresComponent tenga este método
+      } else {
+        console.error("Error: 'alqui' (AlquileresComponent) no está definido.");
+      }
+    }
+  }
   
+      cerrarModalAlquilados() {
+    const modal = document.getElementById("modallAlquiler");
+    if (modal) {
+      modal.style.display = "none";
+    }
+  }
 }

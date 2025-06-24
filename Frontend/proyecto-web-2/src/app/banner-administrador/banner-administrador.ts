@@ -32,7 +32,6 @@ export class BannerAdministrador implements OnInit {
 
 }
 
-
   ngAfterViewInit() {
     this.mostrarDivAlquiler();
   }

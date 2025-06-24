@@ -57,9 +57,9 @@ mostrarAlquilados: boolean = false;
     tipo: item[2],
     valorAlquilerDia: item[3]
     }));
+
       this.mostrarDisponibles = true;
-       this.mostrarAlquilados = false;
-     this.vehiculosF = this.vehiculos;
+      this.mostrarAlquilados = false;
   });
 
 }
@@ -200,6 +200,7 @@ confirmarReserva() {
     } else {
       console.error("Modal no encontrado");
     }
+
   }
 
 

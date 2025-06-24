@@ -14,6 +14,10 @@ export class NavUsuarioComponent {
   constructor(private comunicacion: ComunicacionService, private router: Router) {}
   @Output() reloandAfterInit = new EventEmitter<void>();
   @Output() abrirModalAlquiladosRequest = new EventEmitter<void>();
+    
+  @Output() abrirModalDisponiblesRequest = new EventEmitter<void>();
+
+
 
 
 
@@ -34,6 +38,10 @@ export class NavUsuarioComponent {
 
   onAbrirModalAlquiladosClick(){
     this.abrirModalAlquiladosRequest.emit();
+  }
+
+  onAbrirModalDisponiblesClick(){
+    this.abrirModalDisponiblesRequest.emit();
   }
 }
 
