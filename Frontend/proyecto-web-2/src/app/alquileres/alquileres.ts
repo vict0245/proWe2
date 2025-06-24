@@ -1,262 +1,362 @@
+import { Vehiculos } from './../entidades/vehiculos';
+import { LocalDate } from '@js-joda/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AlquileresServicio } from '../servicio/alquileres';
 import { FormsModule } from '@angular/forms';
 import { VehiculosServicio } from '../servicio/vehiculos';
-import { ComunicacionService } from '../comunicacion';
-import { Alquileres } from '../entidades/alquileres';
+import { ComunicacionService } from '../entidades/comunicacion-service';
+import { Alquiler } from '../lib/pdf';
 import Swal from 'sweetalert2';
+import {generateAlquilerPDF} from '../lib/pdf';
+import { TransDatosService } from '../servicio/trans-datos';
+import { Alquileres } from '../entidades/alquileres';
 
+type gdrReserva = {
+  vehi: Vehiculos;
+  fechaInicio: Date;
+  fechaFin: Date;
+  valorTotal: number;
+  identificacion: String;
+};
 
 @Component({
   standalone: true,
   selector: 'app-alquileres',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './alquileres.html',
-  styleUrl: './alquileres.css'
+  styleUrl: './alquileres.css',
 })
+
 export class AlquileresComponent implements OnInit {
+  valorT: number = 0;
+  objecto: Alquiler = new Alquiler();
+  urlImagen: string | null = null;
   vehiculoSeleccionado: any = null;
- respuestaDisponibilidad: string = '';
+  respuestaDisponibilidad: string = '';
   disponible: boolean | null = null;
-  valorCalculado: String='';
-  alquileres: any = {} ;
-  alquiler: any[]=[];
+  valorCalculado: String = '';
+  alquileres: any = {};
+  alquiler: any[] = [];
   vehiculos: any[] = [];
-  vehiculosF: any[]=[];
-mostrarDisponibles: boolean = false;
-mostrarAlquilados: boolean = false;
+  vehiculosF: any[] = [];
+  mostrarDisponibles: boolean = false;
+  mostrarAlquilados: boolean = false;
+  tipoV: String = 'todos';
+  tabla: String = 'Alquilados';
+  identificacion = '';
+  Inicio: Date;
+  Fin: Date;
+  idAlqui:any;
+  actuaModal=false;
 
+  ngOnInit(): void {
+    this.info();
 
-
-    ngOnInit(): void {
-      this.comunicacion.tipoFiltro$.subscribe((tipo) => {
+    this.comunicacion.tipoFiltro$.subscribe((tipo) => {
       this.tipo(tipo);
     });
 
-      this.comunicacion.Mostrar$.subscribe(() => {
+    this.comunicacion.Mostrar$.subscribe(() => {
       this.verAlquiler();
     });
 
-      this.comunicacion.mostrarA$.subscribe(() =>{
-        this.verAlquilado();
-      });
-  
-
-    
-      
+    this.comunicacion.mostrarA$.subscribe(() => {
+      this.verAlquilado();
+    });
   }
-    constructor(private alquilerservicio: AlquileresServicio,private vehiculosServicio: VehiculosServicio,  private comunicacion: ComunicacionService,){
 
+  constructor(
+    private alquilerservicio: AlquileresServicio,
+    private vehiculosServicio: VehiculosServicio,
+    private comunicacion: ComunicacionService,
+    private cdRef: ChangeDetectorRef,
+    private transfer: TransDatosService
+  ) {}
+
+  info() {
+    this.transfer.datos$.subscribe((data) => {
+      if (data != null) {
+        this.identificacion = data || '';
+        console.log(data);
+      } else {
+        console.warn('no se recibieron datos');
+      }
+    });
   }
-  verAlquiler(){
-  this.alquilerservicio.ObtenerListaVehiculos().subscribe((dato: any[]) => {
-    this.vehiculos = dato.map(item => ({
-    idVehiculo: item[0],                    
-    modelo: item[1],
-    tipo: item[2],
-    valorAlquilerDia: item[3]
-    }));
 
+  verAlquiler() {
+    this.tipoV = 'todos';
+    this.alquilerservicio.ObtenerListaVehiculos().subscribe((dato: any[]) => {
+      this.vehiculos = dato.map((item) => ({
+        idVehiculo: item[0],
+        marca: item[5],
+        modelo: item[1],
+        tipo: item[2],
+        valorAlquilerDia: item[3],
+        img: item[4],
+      }));
       this.mostrarDisponibles = true;
       this.mostrarAlquilados = false;
-  });
-
-}
-
-verAlquilado(){
-  this.alquilerservicio.obtenerListaAlquilados().subscribe(dato => {
-this.alquiler = dato.map((item: any[]) => ({
-  idAlquiler: item[0],
-  placa: item[1],
-  marca: item[2],
-  modelo: item[3],
-  id_cliente: item[4],
-  fecha_inicio: item[5],
-  fecha_fin: item[6],
-  estado: item[7]
-}));
-  this.mostrarDisponibles = false;
-  this.mostrarAlquilados = true;
-  });
-}
-
-
-abrir(item: any) {
-  this.vehiculoSeleccionado = item; 
-  document.getElementById('actualizar')!.style.display = 'block';
-  this.valorCalculado = '';
-  this.mostrarResumen = false;
-}
-
-
-cerrar() {
-  const modal = document.getElementById("actualizar");
-  if (modal) modal.style.display = 'none';
-
-  this.valorCalculado = '';
-  this.respuestaDisponibilidad = '';
-  this.disponible = null;
-  this.alquileres = {};
-  this.vehiculoSeleccionado = null;
-}
-
-
-verificar() {
-  const v = this.vehiculoSeleccionado.idVehiculo;
-  const inicio = this.alquileres.fechaInicio;
-  const fin = this.alquileres.fechaFin;
-  this.valorCalculado = '';
-
-  if (!inicio || !fin) {
-    alert("Debes ingresar ambas fechas.");
-    return;
+      this.vehiculosF = this.vehiculos;
+    });
   }
-  this.alquilerservicio.verificarDisponibilidad(v,inicio, fin).subscribe(dato =>{
-    if(dato!=false){
-      this.respuestaDisponibilidad = "✅ El vehículo está disponible.";
-      this.disponible = true;
-    }else{
-      this.respuestaDisponibilidad = "❌ El vehículo no está disponible.";
-      this.disponible = false;
-    }
-  })
-}
-mostrarResumen: boolean = false;
 
-calcularTotal() {
-  const inicio = this.alquileres.fechaInicio;
-  const fin = this.alquileres.fechaFin;
-  const id = this.vehiculoSeleccionado.idVehiculo;
+  verAlquilado() {
+    this.tabla = 'Alquilados';
+    this.alquilerservicio.obtenerListaAlquilados().subscribe((dato) => {
+      this.alquiler = dato.map((item: any[]) => ({
+        idAlquiler: item[0],
+        placa: item[1],
+        marca: item[2],
+        modelo: item[3],
+        id_cliente: item[4],
+        fecha_inicio: item[5],
+        fecha_fin: item[6],
+        estado: item[7],
+        img: item[8],
+      }));
+      this.mostrarDisponibles = false;
+      this.mostrarAlquilados = true;
+    });
+  }
 
-  if (!inicio || !fin || !id) {
-    this.valorCalculado = "Debes seleccionar el vehículo y las fechas.";
+  verAlquiladoU(identificacion: number) {
+    this.alquilerservicio
+      .obtenerListaAlquiladosU(identificacion)
+      .subscribe((dato) => {
+        this.alquiler = dato.map((item: any[]) => ({
+          idAlquiler: item[0],
+          placa: item[1],
+          marca: item[2],
+          modelo: item[3],
+          id_cliente: item[4],
+          fecha_inicio: item[5],
+          fecha_fin: item[6],
+          estado: item[7],
+          img: item[8],
+        }));
+        this.mostrarDisponibles = false;
+        this.mostrarAlquilados = true;
+      });
+
+  }
+
+  abrir(item: any) {
+    this.vehiculoSeleccionado = item;
+    document.getElementById('actualizar')!.style.display = 'block';
+    this.valorCalculado = '';
     this.mostrarResumen = false;
-    return;
   }
 
-  this.alquilerservicio.calcularValorTotal(id, inicio, fin).subscribe({
-    next: (res) => {
-      this.valorCalculado = res;
-      this.mostrarResumen = true;
-    },
-    error: (err) => {
-      console.error("Error:", err);
-      this.valorCalculado = "Error al calcular el valor total.";
+  cerrar() {
+    this.mostrarResumen=false;
+    document.getElementById('actualizar')!.style.display = 'none';
+    this.valorCalculado = '';
+    this.respuestaDisponibilidad = '';
+    this.disponible = null;
+    this.alquileres = {};
+    this.vehiculoSeleccionado = null;
+  }
+
+  verificar() {
+    const v = this.vehiculoSeleccionado.idVehiculo;
+    const inicio = this.alquileres.fechaInicio;
+    const fin = this.alquileres.fechaFin;
+    this.valorCalculado = '';
+
+    if (!inicio || !fin) {
+      alert('Debes ingresar ambas fechas.');
+      return;
+    }
+    this.alquilerservicio
+      .verificarDisponibilidad(v, inicio, fin)
+      .subscribe((dato) => {
+        if (dato != false) {
+          this.respuestaDisponibilidad = '✅ El vehículo está disponible.';
+          this.disponible = true;
+        } else {
+          this.respuestaDisponibilidad = '❌ El vehículo no está disponible.';
+          this.disponible = false;
+        }
+      });
+  }
+  mostrarResumen: boolean = false;
+
+  calcularTotal() {
+    const inicio = this.alquileres.fechaInicio;
+    const fin = this.alquileres.fechaFin;
+    const id = this.vehiculoSeleccionado.idVehiculo;
+
+    this.Inicio = inicio;
+    this.Fin = fin;
+
+    if (!inicio || !fin || !id) {
+      this.valorCalculado = 'Debes seleccionar el vehículo y las fechas.';
       this.mostrarResumen = false;
+      return;
     }
-  });
 
-}
-
-confirmarReserva() {
-  const inicio = this.alquileres.fechaInicio;
-  const fin = this.alquileres.fechaFin;
-  const vehiculoId = this.vehiculoSeleccionado?.idVehiculo; 
-
-  if (!inicio || !fin || !vehiculoId) {
-    alert("Debes completar todos los datos.");
-    return;
+    this.alquilerservicio.calcularValorTotal(id, inicio, fin).subscribe({
+      next: (res) => {
+        this.valorCalculado = res;
+        this.mostrarResumen = true;
+        this.valorT = res;
+      },
+      error: (err) => {
+        console.error('Error:', err);
+        this.valorCalculado = 'Error al calcular el valor total.';
+        this.mostrarResumen = false;
+      },
+    });
   }
 
-  const reserva = {
-    fechaInicio: inicio,
-    fechaFin: fin,
-    estado: "Pendiente",
-    vehiculo: { idVehiculo: vehiculoId },
-    usuario: { idUsuario: 1 } // ⚠️ Simulado, reemplazar por el ID del usuario logueado
-  };
-
-  this.alquilerservicio.guardarReserva(reserva).subscribe({
-    next: (res) => {
-      alert("✅ " + res);
-      this.cerrar();
-    },
-    error: (err) => {
-      console.error("❌ Error al guardar reserva:", err);
-      alert("No se pudo registrar la solicitud.");
+  confirmarReserva() {
+    // Asegúrate que las fechas son objetos Date válidos
+    const inicio = new Date(this.Inicio);
+    const fin = new Date(this.Fin);
+    
+    // Validación de fechas
+    if (isNaN(inicio.getTime())) {
+        alert('Fecha de inicio no válida');
+        return;
     }
-  });
+    if (isNaN(fin.getTime())) {
+        alert('Fecha fin no válida');
+        return;
+    }
+
+    const reservaData:gdrReserva = {
+        vehi: this.vehiculoSeleccionado,
+        fechaInicio: inicio,
+        fechaFin: fin,
+        valorTotal: this.valorT,
+        identificacion: this.identificacion
+    };
+
+    console.log('Datos a enviar:', reservaData);
+    
+    this.alquilerservicio.guardarReserva(reservaData).subscribe({
+        next: (dato) => {
+            if (dato) {
+                alert('Reserva Guardada');
+            } else {
+                alert('No se pudo guardar');
+            }
+        },
+        error: (err) => {
+            console.error('Error al guardar reserva:', err);
+            alert('Error al procesar la reserva');
+        }
+    });
 }
 
+  async traerAlqui() {
+    try {
+        const reserva = [
+            this.Inicio,
+            this.Fin,
+            'Pendiente',
+            this.vehiculoSeleccionado.idVehiculo,
+            this.identificacion
+        ];
+
+        // Convertir a Promise para poder usar await
+        const dato = await this.alquilerservicio.obtenerAlquiler(reserva).toPromise();
+        
+        if (!dato) {
+            throw new Error('No se recibieron datos del servidor');
+        }
+        const fechaEmision = new Date().toISOString().split('T')[0];
+        console.log('Datos para PDF:', dato, fechaEmision);
+        dato[0].push(this.valorT);
+        // Generar PDF solo si tenemos datos válidos
+        if (dato) {
+            generateAlquilerPDF(dato, fechaEmision);
+        } else {
+            console.error('Datos incompletos para generar PDF');
+        }
+    } catch (error) {
+        console.error('Error en traerAlqui:', error);
+        alert('Error al obtener datos para el PDF');
+    }
+}
 
   verVehiculosAlquilados() {
-    const divAlquilados = document.getElementById("VehículosAlquilados");
-    const divDisponibles= document.getElementById("VehículosDisponibles");
-    if (divAlquilados && divDisponibles) {
-      divDisponibles.style.display = "none";
-      divAlquilados.style.display = "block";
-    } else {
-      console.error("Modal no encontrado");
-    }
+    this.mostrarDisponibles = false;
+    this.mostrarAlquilados = true;
+    this.cdRef.detectChanges();
   }
 
-  verVehiculosDisponibles(){
-    const divAlquilados = document.getElementById("VehículosAlquilados");
-    const divDisponibles= document.getElementById("VehículosDisponibles");
-    if (divAlquilados && divDisponibles) {
-      divAlquilados.style.display = "none";
-      divDisponibles.style.display = "block";
-    } else {
-      console.error("Modal no encontrado");
-    }
-
+  verVehiculosDisponibles() {
+    this.mostrarDisponibles = true;
+    this.mostrarAlquilados = false;
+    this.cdRef.detectChanges();
   }
 
+  tipo(tipo: string) {
+    this.tipoV = tipo;
+    this.vehiculosServicio.tipoVehiculo(tipo).subscribe((dato) => {
+      console.log('Respuesta del backend:', dato);
+      this.vehiculosF = dato;
+    });
+    this.verVehiculosDisponibles();
+  }
 
+  tablaM(tabla: string) {
+    this.tabla = tabla;
+  }
 
-   tipo(tipo: string) {
-  console.log("Tipo seleccionado:", tipo); 
-  this.vehiculosServicio.tipoVehiculo(tipo).subscribe(dato => {
-    console.log("Respuesta del backend:", dato);
-    this.vehiculosF = dato;
-  });
-}
-cancelar(id: number) {
-  Swal.fire({
-    title: '¿Estás seguro?',
-    text: `¿Deseas cancelar el alquiler con ID ${id}?`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sí, cancelar',
-    cancelButtonText: 'No'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      console.log("✅ ID recibido para cancelar:", id);
+  async cancelar(id: number) {
+    const confirm = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: `¿Deseas cancelar el alquiler con ID ${id}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, cancelar',
+        cancelButtonText: 'No'
+    });
 
-      this.alquilerservicio.cancelarAlquiler(id).subscribe(
-        res => {
-          // ✅ Como el backend devuelve solo un string, usamos res directamente
-          Swal.fire('Cancelado', res, 'success');
-          this.verAlquilado(); // 🔄 Refresca la tabla
-        },
-        err => {
-          console.error("❌ Error al cancelar:", err.error || err.message);
-          Swal.fire('Error', err.error || 'Error al cancelar', 'error');
-        }
-      );
-    } else {
-      console.log("❎ Cancelación abortada por el usuario.");
+    if (!confirm.isConfirmed) {
+        console.log('Cancelación abortada');
+        return;
     }
-  });
+
+    try {
+        const res = await this.alquilerservicio.cancelarAlquiler(id).toPromise();
+        await Swal.fire('¡Cancelado!', res.message || 'Operación exitosa', 'success');
+        this.verAlquilado();
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire('Error', error + 'Error al cancelar', 'error');
+    }
 }
 
-  verListaP(){
-this.alquilerservicio.obtenerListaPendientes().subscribe(dato => {
-this.alquiler = dato.map((item: any[]) => ({
-  idAlquiler: item[0],
-  placa: item[1],
-  marca: item[2],
-  modelo: item[3],
-  id_cliente: item[4],
-  fecha_inicio: item[5],
-  fecha_fin: item[6],
-  estado: item[7]
-}));
+  verListaP() {
+    this.tipoV = 'Pendientes';
+    this.alquilerservicio.obtenerListaPendientes().subscribe((dato: any[]) => {
+      this.vehiculos = dato.map((item) => {
+        return {
+          idVehiculo: item[0],
+          marca: item[5],
+          modelo: item[1],
+          tipo: item[2],
+          valorAlquilerDia: item[3],
+          img: item[4],
+        };
+      });
 
-  this.mostrarDisponibles = false;
-  this.mostrarAlquilados = true;
-  });
+      this.vehiculosF = this.vehiculos;
+      this.mostrarDisponibles = true;
+      this.mostrarAlquilados = false;
+    });
   }
 
+  convertirBlobADataURL(blob: Blob): Promise<string> {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
+    });
+  }
 }

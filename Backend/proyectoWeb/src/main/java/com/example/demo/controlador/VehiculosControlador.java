@@ -85,15 +85,24 @@ public class VehiculosControlador {
                 .map(vehiculo -> ResponseEntity.ok(vehiculo))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
+<<<<<<< HEAD
 
 
 	@GetMapping("/tipoVehiculo")
+=======
+    
+    @GetMapping("/tipoVehiculo")
+>>>>>>> fccd9131ffed2e3465032b8e89f818d483c18417
 	public ResponseEntity<List<Vehiculos>> tipoV(@RequestParam String tipo){
 		 System.out.println("Tipo recibido en backend: " + tipo);
 		List<Vehiculos> vehiculo = vehiculosRepositorio.tipo(tipo);
 		return ResponseEntity.ok(vehiculo);
 	
 	}
+<<<<<<< HEAD
 	
 	
+=======
+
+>>>>>>> fccd9131ffed2e3465032b8e89f818d483c18417
 }

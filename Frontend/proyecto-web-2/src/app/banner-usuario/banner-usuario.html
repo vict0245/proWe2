@@ -1,6 +1,6 @@
 <app-nav-usuario
-  (abrirModalDisponiblesRequest)="mostrarDivDisponible()"
-(abrirModalAlquiladosRequest)="mostrarDivAlquilers()"
+(reloandAfterInit)="ngAfterViewInit()"
+(abrirModalAlquilados)="mostrarDivAlquilersU()"
 ></app-nav-usuario>
 <div class="vh-100 gradient-custom">
     <div class="welcome-container ">
@@ -10,10 +10,9 @@
     <div id="modallVehiculo" class="welcome-container" style="display: none;">
         <app-alquileres></app-alquileres>
     </div>
-    <div id="modallAlquiler" class="welcome-container" style="display: none;">
+        <div id="modallVehi" class="welcome-container" style="display: none;">
         <app-vehiculo-componente
-        (recargarAfterInitRequest)="mostrarDivAlquilers()"></app-vehiculo-componente>
+        (recargarAfterInitRequest)="mostrarDivAlquilersU()"></app-vehiculo-componente>
     </div>
-
 </div>
 <router-outlet></router-outlet>

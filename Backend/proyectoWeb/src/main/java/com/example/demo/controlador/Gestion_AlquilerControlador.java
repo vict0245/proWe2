@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,17 +48,25 @@ public class Gestion_AlquilerControlador {
 	private Gestion_AlquilerRepositorio repositorioGestion;
 	
 	@PutMapping("/estadoEntregado")
-	public ResponseEntity<?> entregarVehiculo(@RequestParam Long idAlquiler, @RequestParam Long idAdministrador) {
-	    Optional<Alquileres> alquilerRevision = repositorioAlquiler.findById(idAlquiler);
-
-	    if (alquilerRevision.isEmpty()) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alquiler no encontrado");
+	public ResponseEntity<?> entregarVehiculo(@RequestParam String placa, @RequestHeader("idAdministrador") Long idAdministrador) {
+	    
+	    Optional<Alquileres> alquilerOpt = repositorioAlquiler.findByVehiculoPlacaAndEstado(placa, "Pendiente");
+	    
+	    if (alquilerOpt.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(Map.of("error", "No hay alquiler para la placa: " + placa));
 	    }
 
+<<<<<<< HEAD
 	    Alquileres alquiler = alquilerRevision.get();
 
 	    alquiler.setEstado("Alquilado");
 	    alquiler.getVehiculo().setEstado("Alquilado");
+=======
+	    Alquileres alquiler = alquilerOpt.get();
+	    alquiler.setEstado("ENTREGADO");
+	    alquiler.getVehiculo().setEstado("ENTREGADO");
+>>>>>>> fccd9131ffed2e3465032b8e89f818d483c18417
 
 	    repositorioAlquiler.save(alquiler);
 	    repositorioV.save(alquiler.getVehiculo());
@@ -66,21 +75,20 @@ public class Gestion_AlquilerControlador {
 	    gestion.setAccion("entregado");
 	    gestion.setFechaAccion(LocalDate.now());
 	    gestion.setAlquiler(alquiler);
-
-	    Administradores admin = repositorioA.findById(idAdministrador).get(); // Temporal
-	    gestion.setAdministrador(admin);
+	    gestion.setAdministrador(repositorioA.findById(idAdministrador).orElse(null));
 
 	    repositorioGestion.save(gestion);
-	    
 
-	    Map<String, String> respuesta = new HashMap<>();
-	    respuesta.put("mensaje", "Vehículo entregado correctamente");
-	    return ResponseEntity.ok(respuesta);
+	    return ResponseEntity.ok(Map.of(
+	        "mensaje", "Vehículo entregado correctamente",
+	        "placa", placa,
+	        "idAlquiler", alquiler.getIdAlquiler()
+	    ));
 	}
 	
 	@PutMapping("/estadoDevuelto")
-	public ResponseEntity<?> devolverVehiculo(@RequestParam Long idAlquiler) {
-	    Optional<Alquileres> alquilerRevision = repositorioAlquiler.findById(idAlquiler);
+	public ResponseEntity<?> devolverVehiculo(@RequestParam String placa) {
+	    Optional<Alquileres> alquilerRevision = repositorioAlquiler.findByVehiculoPlacaAndEstado(placa, "ENTREGADO");
 
 	    if (alquilerRevision.isEmpty()) {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -89,16 +97,24 @@ public class Gestion_AlquilerControlador {
 	    Alquileres alquiler = alquilerRevision.get();
 
 	    LocalDate fechaActual = LocalDate.now();
+	    LocalDate fechaInicio = alquiler.getFechaInicio();
 	    LocalDate fechaFin = alquiler.getFechaFin();
+
+	    long diasAlquiler = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
+	    if (diasAlquiler <= 0) diasAlquiler = 1; // Por si acaso hay fechas inválidas
+
+	    BigDecimal tarifaDiaria = alquiler.getVehiculo().getValorAlquilerDia(); // Asegúrate de que exista este getter
+	    BigDecimal valorBase = tarifaDiaria.multiply(BigDecimal.valueOf(diasAlquiler));
 
 	    long retrasoDias = 0;
 	    if (fechaActual.isAfter(fechaFin)) {
 	        retrasoDias = ChronoUnit.DAYS.between(fechaFin, fechaActual);
 	    }
 
-	    BigDecimal valorAdicional = BigDecimal.valueOf(retrasoDias * 10000); 
-	    BigDecimal nuevoTotal = alquiler.getValorTotal().add(valorAdicional);
+	    BigDecimal valorAdicional = BigDecimal.valueOf(retrasoDias * 10000);
+	    BigDecimal nuevoTotal = valorBase.add(valorAdicional);
 
+	    
 	    alquiler.setFechaEntregaReal(fechaActual);
 	    alquiler.setEstado("Finalizado");
 	    alquiler.setValorAdicional(valorAdicional);

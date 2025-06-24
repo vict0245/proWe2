@@ -5,18 +5,19 @@ import { TransDatosService } from '../servicio/trans-datos';
 import { AlquileresComponent } from '../alquileres/alquileres';
 import { ViewChild } from '@angular/core';
 import { VehiculoComponente } from '../vehiculo-componente/vehiculo-componente';
-import { NavAdminComponent } from '../nav-admin/nav-admin'; 
+import { ComunicacionService } from '../entidades/comunicacion-service';
 
 @Component({
   standalone: true,
   selector: 'app-banner-usuario',
-  imports: [RouterOutlet,NavUsuarioComponent,AlquileresComponent, VehiculoComponente,NavAdminComponent],
+  imports: [RouterOutlet,NavUsuarioComponent,AlquileresComponent,VehiculoComponente],
   templateUrl: './banner-usuario.html',
   styleUrl: './banner-usuario.css'
 })
 export class BannerUsuarioComponent {
+  identU:number;
   identificacion: string = '';
-  constructor(private router: Router, private transfer:TransDatosService) {}
+  constructor(private router: Router, private transfer:TransDatosService, private comu: ComunicacionService) {}
   
   @ViewChild(AlquileresComponent) alqui!: AlquileresComponent;
   @ViewChild(VehiculoComponente) vehi!: VehiculoComponente;
@@ -26,7 +27,8 @@ export class BannerUsuarioComponent {
   }
 
   ngAfterViewInit() {
-    this.mostrarDivDisponible();
+    this.mostrarDivAlquiler();
+    this.comu.mostrarTodo();
   }
 
   info(){
@@ -54,30 +56,24 @@ export class BannerUsuarioComponent {
     }
   }
 
-    cerrarModalDisponibles() {
-    const modal = document.getElementById("modallVehiculo");
+   mostrarDivAlquilersU(){
+    this.identU =parseInt(this.identificacion,10);
+    const modal = document.getElementById("modallAlqui");
     if (modal) {
-      modal.style.display = "none";
-    }
-  }
-
-    mostrarDivDisponible(){
-    const modal = document.getElementById("modallVehiculo"); // Asume que es el mismo modal o asegúrate de que tienes otro ID para el modal de disponibles.
-    if (modal) {
-      this.cerrarModalDisponibles();
+      this.cerrarModalvehiculos();
       modal.style.display = "block";
-      // Añade una comprobación de seguridad
-      if (this.alqui) {
-        this.alqui.verAlquiler();
-        this.alqui.verVehiculosDisponibles(); // Asegúrate de que AlquileresComponent tenga este método
+      // Añade una comprobación de seguridad, aunque en ngAfterViewInit debería estar siempre definido
+      if (this.alqui && !isNaN(this.identU)) {
+        this.alqui.verAlquiladoU(this.identU);
+        this.alqui.verVehiculosAlquilados();
       } else {
         console.error("Error: 'alqui' (AlquileresComponent) no está definido.");
       }
     }
   }
-  
-      cerrarModalAlquilados() {
-    const modal = document.getElementById("modallAlquiler");
+
+    cerrarModalvehiculos() {
+    const modal = document.getElementById("modallVehi");
     if (modal) {
       modal.style.display = "none";
     }

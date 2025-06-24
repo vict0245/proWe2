@@ -1,19 +1,30 @@
 package com.example.demo.modelo;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class credenciales {
-		String usuario;
-		String identificacion;
-		String password;
-		LocalDate fechaInicio;
-		LocalDate fechaFin;
-		Long id;
-		String estado;
+		private String usuario;
+		private String identificacion;
+		private String password;
+		private LocalDate fechaInicio;
+		private LocalDate fechaFin;
+		private Long id;
+		private String estado;
+		private Vehiculos vehi;
+		private BigDecimal valorTotal;
 		
 		public credenciales() {
 			super();
 			// TODO Auto-generated constructor stub
+		}
+		
+		public credenciales(Vehiculos vehi,LocalDate fechaInicio , LocalDate fechaFin, BigDecimal valorTotal, String identificacion) {
+			this.vehi=vehi;
+			this.fechaInicio=fechaInicio;
+			this.fechaFin=fechaFin;
+			this.valorTotal=valorTotal;
+			this.identificacion=identificacion;
 		}
 		
 		public credenciales(String identificacion, String password) {
@@ -107,6 +118,21 @@ public class credenciales {
 		public void setUsuario(String usuario) {
 			this.usuario = usuario;
 		}
-		
+
+		public Vehiculos getVehi() {
+			return vehi;
+		}
+
+		public void setVehi(Vehiculos vehi) {
+			this.vehi = vehi;
+		}
+
+		public BigDecimal getValorTotal() {
+			return valorTotal;
+		}
+
+		public void setValorTotal(BigDecimal valorTotal) {
+			this.valorTotal = valorTotal;
+		}
 		
 }

@@ -14,6 +14,7 @@ export class NavAdminComponent implements OnInit {
   @Output() abrirModalDisponiblesRequest = new EventEmitter<void>();
   @Output() AbrirDivVehiculoRequest = new EventEmitter<void>();
   @Output() abrirModalPendientesRequest = new EventEmitter<void>();
+  
 
   constructor(private router:Router) { }
   ngOnInit(): void {

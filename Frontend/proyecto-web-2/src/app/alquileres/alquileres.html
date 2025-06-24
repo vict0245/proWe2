@@ -1,9 +1,11 @@
-<div *ngIf="mostrarDisponibles" id="VehículosDisponibles" display="none">
-  <p class="h4">Vehículos Disponibles</p>
+<div *ngIf="mostrarDisponibles" id="VehiculosDisponibles" display="none">
+  <p class="h4">Vehículos Disponibles {{tipoV}}</p>
 
   <table class="table table-bordered mt-3">
     <thead>
       <tr>
+        <th>Imagen</th>
+        <th>Marca</th>
         <th>Modelo</th>
         <th>Tipo</th>
         <th>Valor Día</th>
@@ -11,7 +13,16 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of vehiculos">
+      <tr *ngFor="let item of vehiculosF">
+        <td>
+          <img
+            *ngIf="item.img"
+            [src]="'data:image/jpeg;base64,' + item.img"
+            width="100"
+          />
+          <p *ngIf="!item.img">Sin imagen</p>
+        </td>
+        <td>{{item.marca}}</td>
         <td>{{ item.modelo }}</td>
         <td>{{ item.tipo }}</td>
         <td>{{ item.valorAlquilerDia }}</td>
@@ -125,18 +136,20 @@
           >
             Confirmar Reserva
           </button>
+          <button *ngIf="mostrarResumen" (click)="traerAlqui()">generar Pdf</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="mostrarAlquilados" id="VehículosAlquilados" display="none">
-  <p class="h4">Vehículos Alquilados</p>
+<div *ngIf="mostrarAlquilados" id="VehiculosAlquilados" display="none">
+  <p class="h4">Vehículos {{tabla}}</p>
 
   <table class="table table-bordered mt-3">
     <thead>
       <tr>
+        <th>imagen</th>
         <th>Placa</th>
         <th>Marca</th>
         <th>Modelo</th>
@@ -149,6 +162,14 @@
     </thead>
     <tbody>
       <tr *ngFor="let item of alquiler">
+        <td>
+          <img
+            *ngIf="item.img"
+            [src]="'data:image/jpeg;base64,' + item.img"
+            width="100"
+          />
+          <p *ngIf="!item.img">Sin imagen</p>
+        </td>
         <td>{{ item.placa }}</td>
         <td>{{ item.marca }}</td>
         <td>{{ item.modelo }}</td>

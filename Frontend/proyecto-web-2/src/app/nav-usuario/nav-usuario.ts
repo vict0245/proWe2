@@ -1,7 +1,8 @@
 import { VehiculosServicio } from './../servicio/vehiculos';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ComunicacionService } from '../comunicacion';
-import { Router, RouterOutlet } from '@angular/router';
+import { ComunicacionService } from '../entidades/comunicacion-service';
+
+
 
 @Component({
   standalone: true,
@@ -11,22 +12,15 @@ import { Router, RouterOutlet } from '@angular/router';
   styleUrl: './nav-usuario.css'
 })
 export class NavUsuarioComponent {
-  constructor(private comunicacion: ComunicacionService, private router: Router) {}
+  constructor(private comunicacion: ComunicacionService) {}
   @Output() reloandAfterInit = new EventEmitter<void>();
-  @Output() abrirModalAlquiladosRequest = new EventEmitter<void>();
-    
-  @Output() abrirModalDisponiblesRequest = new EventEmitter<void>();
-
-
-
-
+  @Output() abrirModalAlquilados = new EventEmitter<void>();
 
     Vehiculos: VehiculosServicio;
 
      onReloandAfterinit(){
     this.reloandAfterInit.emit();
   }
-   
 
   filtrar(tipo: string) {
     this.comunicacion.emitirTipo(tipo);
@@ -37,12 +31,9 @@ export class NavUsuarioComponent {
   }
 
   onAbrirModalAlquiladosClick(){
-    this.abrirModalAlquiladosRequest.emit();
+    this.abrirModalAlquilados.emit();
   }
 
-  onAbrirModalDisponiblesClick(){
-    this.abrirModalDisponiblesRequest.emit();
-  }
 }
 
  

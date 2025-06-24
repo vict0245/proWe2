@@ -1,8 +1,14 @@
 package com.example.demo.modelo;
 
+import java.nio.file.Files;
 import java.math.BigDecimal;
 import java.util.List;
 
+<<<<<<< HEAD
+=======
+import org.springframework.web.multipart.MultipartFile;
+
+>>>>>>> fccd9131ffed2e3465032b8e89f818d483c18417
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -10,6 +16,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -28,6 +35,13 @@ public class Vehiculos {
     private String estado;
     private BigDecimal valorAlquilerDia;
     private String tipo;
+<<<<<<< HEAD
+=======
+    
+    @Lob
+    private byte[] img;
+    
+>>>>>>> fccd9131ffed2e3465032b8e89f818d483c18417
     @JsonIgnore
     @OneToMany(mappedBy = "vehiculo")
     private List<Alquileres> alquileres;
@@ -126,6 +140,16 @@ public class Vehiculos {
 	public void setAlquileres(List<Alquileres> alquileres) {
 		this.alquileres = alquileres;
 	}
+
+	public byte[] getImg() {
+		return img;
+	}
+
+	public void setImg(byte[] img) {
+		this.img = img;
+	}
+	
+	
 
 }
 
